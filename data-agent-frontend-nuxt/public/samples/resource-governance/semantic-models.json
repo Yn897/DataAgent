@@ -1,0 +1,1895 @@
+{
+  "name": "资源治理-语义模型示例",
+  "items": [
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "id",
+      "businessName": "主键ID",
+      "synonyms": "记录ID",
+      "businessDescription": "Zone日聚合记录唯一标识",
+      "columnComment": "主键",
+      "dataType": "bigint"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "date_day",
+      "businessName": "统计日期",
+      "synonyms": "日期,天,分区日期",
+      "businessDescription": "按天汇总的统计日期",
+      "columnComment": "分区日期",
+      "dataType": "date"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "jdos_cluster_zone",
+      "businessName": "JDOS集群Zone",
+      "synonyms": "Zone,集群Zone",
+      "businessDescription": "JDOS容器集群Zone标识",
+      "columnComment": "Zone",
+      "dataType": "varchar(100)"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "jdos_cluster_name",
+      "businessName": "JDOS集群名称",
+      "synonyms": "集群名",
+      "businessDescription": "JDOS容器集群名称",
+      "columnComment": "",
+      "dataType": "varchar(100)"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "jdos_zone_product_own",
+      "businessName": "Zone产品归属",
+      "synonyms": "产品归属",
+      "businessDescription": "Zone资源归属的产品/业务线",
+      "columnComment": "",
+      "dataType": "varchar(100)"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "host_count",
+      "businessName": "宿主机数量",
+      "synonyms": "主机数,机器数",
+      "businessDescription": "该Zone宿主机总台数",
+      "columnComment": "",
+      "dataType": "bigint"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "total_vcpus",
+      "businessName": "CPU总核数",
+      "synonyms": "总vCPU",
+      "businessDescription": "Zone内CPU总核数",
+      "columnComment": "CPU总量",
+      "dataType": "double"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "allocatable_vcpus",
+      "businessName": "可分配CPU核数",
+      "synonyms": "可分配vCPU",
+      "businessDescription": "可用于分配的CPU核数",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "vcpus_used",
+      "businessName": "已使用CPU核数",
+      "synonyms": "已用vCPU",
+      "businessDescription": "已分配/已使用的CPU核数",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "cpu_alloc_rate",
+      "businessName": "CPU分配率",
+      "synonyms": "CPU利用率",
+      "businessDescription": "CPU使用占可分配比例，单位%",
+      "columnComment": "CPU(%)",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "cpu_status",
+      "businessName": "CPU状态",
+      "synonyms": "CPU治理状态",
+      "businessDescription": "CPU资源治理状态",
+      "columnComment": "0正常/1低/2高",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "cpu_low_consecutive_days",
+      "businessName": "CPU低负载连续天数",
+      "synonyms": "CPU低利用天数",
+      "businessDescription": "CPU持续低负载连续天数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "cpu_high_consecutive_days",
+      "businessName": "CPU高负载连续天数",
+      "synonyms": "CPU高利用天数",
+      "businessDescription": "CPU持续高负载连续天数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "cpu_need_governance",
+      "businessName": "CPU是否需要治理",
+      "synonyms": "CPU治理标识",
+      "businessDescription": "1表示需要CPU治理",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "cpu_governance_reason",
+      "businessName": "CPU治理原因",
+      "synonyms": "治理原因",
+      "businessDescription": "如LOW/HIGH",
+      "columnComment": "LOW/HIGH",
+      "dataType": "varchar(32)"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "total_memory_mb",
+      "businessName": "内存总量",
+      "synonyms": "总内存",
+      "businessDescription": "内存总量MB",
+      "columnComment": "单位MB",
+      "dataType": "bigint"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "allocatable_memory_mb",
+      "businessName": "可分配内存",
+      "synonyms": "可分配内存MB",
+      "businessDescription": "可分配内存MB",
+      "columnComment": "单位MB",
+      "dataType": "bigint"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "memory_mb_used",
+      "businessName": "已使用内存",
+      "synonyms": "内存使用量",
+      "businessDescription": "已使用内存MB",
+      "columnComment": "单位MB",
+      "dataType": "bigint"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "memory_alloc_rate",
+      "businessName": "内存分配率",
+      "synonyms": "内存利用率",
+      "businessDescription": "内存使用占可分配比例%",
+      "columnComment": "单位%",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "memory_status",
+      "businessName": "内存状态",
+      "synonyms": "内存治理状态",
+      "businessDescription": "内存资源治理状态",
+      "columnComment": "0/1/2",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "memory_low_consecutive_days",
+      "businessName": "内存低负载连续天数",
+      "synonyms": "",
+      "businessDescription": "内存持续低负载天数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "memory_high_consecutive_days",
+      "businessName": "内存高负载连续天数",
+      "synonyms": "",
+      "businessDescription": "内存持续高负载天数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "memory_need_governance",
+      "businessName": "内存是否需要治理",
+      "synonyms": "",
+      "businessDescription": "1表示需要内存治理",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "memory_governance_reason",
+      "businessName": "内存治理原因",
+      "synonyms": "",
+      "businessDescription": "如LOW/HIGH",
+      "columnComment": "LOW/HIGH",
+      "dataType": "varchar(32)"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "create_time",
+      "businessName": "创建时间",
+      "synonyms": "入库时间",
+      "businessDescription": "记录创建时间",
+      "columnComment": "",
+      "dataType": "datetime"
+    },
+    {
+      "tableName": "container_zone_agg_daily",
+      "columnName": "update_time",
+      "businessName": "更新时间",
+      "synonyms": "修改时间",
+      "businessDescription": "记录更新时间",
+      "columnComment": "",
+      "dataType": "datetime"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "id",
+      "businessName": "主键ID",
+      "synonyms": "记录ID",
+      "businessDescription": "监控组日聚合记录唯一标识",
+      "columnComment": "主键",
+      "dataType": "bigint"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "date_day",
+      "businessName": "统计日期",
+      "synonyms": "日期,天",
+      "businessDescription": "按天汇总统计日期",
+      "columnComment": "统计日期",
+      "dataType": "date"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "siyuan_monitor_group",
+      "businessName": "思源监控组",
+      "synonyms": "监控组",
+      "businessDescription": "思源平台监控组名称",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "product_name",
+      "businessName": "产品名称",
+      "synonyms": "产品,业务线",
+      "businessDescription": "监控组所属产品",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "total_machine_count",
+      "businessName": "机器总数",
+      "synonyms": "总机器数",
+      "businessDescription": "纳入统计的物理机总数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "low_utilization_count",
+      "businessName": "低利用率机器数",
+      "synonyms": "低利用机器数",
+      "businessDescription": "低利用率状态机器数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "low_utilization_percent",
+      "businessName": "低利用率机器占比",
+      "synonyms": "低利用占比",
+      "businessDescription": "低利用机器占比%",
+      "columnComment": "单位%",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "idle_machine_count",
+      "businessName": "空闲机器数",
+      "synonyms": "闲置机器数",
+      "businessDescription": "空闲状态机器数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "idle_machine_percent",
+      "businessName": "空闲机器占比",
+      "synonyms": "空闲占比",
+      "businessDescription": "空闲机器占比%",
+      "columnComment": "单位%",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "avg_cpu_usage",
+      "businessName": "CPU日均利用率",
+      "synonyms": "平均CPU",
+      "businessDescription": "CPU利用率日均值%",
+      "columnComment": "CPU日均(%)",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "peak_cpu_usage",
+      "businessName": "CPU峰值利用率",
+      "synonyms": "CPU峰值",
+      "businessDescription": "CPU利用率峰值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "p50_cpu_usage",
+      "businessName": "CPU P50利用率",
+      "synonyms": "CPU中位数",
+      "businessDescription": "CPU利用率50分位%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "max_cpu_usage",
+      "businessName": "CPU最大利用率",
+      "synonyms": "CPU最大值",
+      "businessDescription": "CPU利用率最大值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "avg_mem_usage",
+      "businessName": "内存日均利用率",
+      "synonyms": "平均内存",
+      "businessDescription": "内存利用率日均值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "peak_mem_usage",
+      "businessName": "内存峰值利用率",
+      "synonyms": "内存峰值",
+      "businessDescription": "内存利用率峰值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "p50_mem_usage",
+      "businessName": "内存P50利用率",
+      "synonyms": "内存中位数",
+      "businessDescription": "内存利用率50分位%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "max_mem_usage",
+      "businessName": "内存最大利用率",
+      "synonyms": "内存最大值",
+      "businessDescription": "内存利用率最大值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "avg_net_rx_tx_mbps",
+      "businessName": "网络日均吞吐",
+      "synonyms": "平均网络流量",
+      "businessDescription": "网络收发吞吐日均Mbps",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "peak_net_rx_tx_mbps",
+      "businessName": "网络峰值吞吐",
+      "synonyms": "网络峰值",
+      "businessDescription": "网络吞吐峰值Mbps",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "p50_net_rx_tx_mbps",
+      "businessName": "网络P50吞吐",
+      "synonyms": "网络中位数",
+      "businessDescription": "网络吞吐50分位Mbps",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "max_net_rx_tx_mbps",
+      "businessName": "网络最大吞吐",
+      "synonyms": "网络最大值",
+      "businessDescription": "网络吞吐最大值Mbps",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "avg_disk_usage",
+      "businessName": "磁盘日均利用率",
+      "synonyms": "平均磁盘",
+      "businessDescription": "磁盘利用率日均值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "peak_disk_usage",
+      "businessName": "磁盘峰值利用率",
+      "synonyms": "磁盘峰值",
+      "businessDescription": "磁盘利用率峰值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "p50_disk_usage",
+      "businessName": "磁盘P50利用率",
+      "synonyms": "磁盘中位数",
+      "businessDescription": "磁盘利用率50分位%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "max_disk_usage",
+      "businessName": "磁盘最大利用率",
+      "synonyms": "磁盘最大值",
+      "businessDescription": "磁盘利用率最大值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "create_time",
+      "businessName": "创建时间",
+      "synonyms": "入库时间",
+      "businessDescription": "记录创建时间",
+      "columnComment": "",
+      "dataType": "datetime"
+    },
+    {
+      "tableName": "machine_monitor_group_agg_daily",
+      "columnName": "update_time",
+      "businessName": "更新时间",
+      "synonyms": "修改时间",
+      "businessDescription": "记录更新时间",
+      "columnComment": "",
+      "dataType": "datetime"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "id",
+      "businessName": "主键ID",
+      "synonyms": "记录ID",
+      "businessDescription": "组件日聚合记录唯一标识",
+      "columnComment": "主键",
+      "dataType": "bigint"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "date_day",
+      "businessName": "统计日期",
+      "synonyms": "日期,天",
+      "businessDescription": "按天汇总统计日期",
+      "columnComment": "统计日期",
+      "dataType": "date"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "component",
+      "businessName": "组件类型",
+      "synonyms": "组件,中间件",
+      "businessDescription": "如yarn/hbase/clickhouse/doris",
+      "columnComment": "",
+      "dataType": "varchar(50)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "product_name",
+      "businessName": "产品名称",
+      "synonyms": "产品,业务线",
+      "businessDescription": "组件所属产品",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "total_machine_count",
+      "businessName": "机器总数",
+      "synonyms": "总机器数",
+      "businessDescription": "该组件维度物理机总数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "low_utilization_count",
+      "businessName": "低利用率机器数",
+      "synonyms": "低利用机器数",
+      "businessDescription": "低利用率机器数量",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "low_utilization_percent",
+      "businessName": "低利用率机器占比",
+      "synonyms": "低利用占比",
+      "businessDescription": "低利用机器占比%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "idle_machine_count",
+      "businessName": "空闲机器数",
+      "synonyms": "闲置机器数",
+      "businessDescription": "空闲机器数量",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "idle_machine_percent",
+      "businessName": "空闲机器占比",
+      "synonyms": "空闲占比",
+      "businessDescription": "空闲机器占比%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "avg_cpu_usage",
+      "businessName": "CPU日均利用率",
+      "synonyms": "平均CPU",
+      "businessDescription": "CPU利用率日均值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "peak_cpu_usage",
+      "businessName": "CPU峰值利用率",
+      "synonyms": "CPU峰值",
+      "businessDescription": "CPU利用率峰值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "p50_cpu_usage",
+      "businessName": "CPU P50利用率",
+      "synonyms": "CPU中位数",
+      "businessDescription": "CPU利用率50分位%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "max_cpu_usage",
+      "businessName": "CPU最大利用率",
+      "synonyms": "CPU最大值",
+      "businessDescription": "CPU利用率最大值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "avg_mem_usage",
+      "businessName": "内存日均利用率",
+      "synonyms": "平均内存",
+      "businessDescription": "内存利用率日均值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "peak_mem_usage",
+      "businessName": "内存峰值利用率",
+      "synonyms": "内存峰值",
+      "businessDescription": "内存利用率峰值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "p50_mem_usage",
+      "businessName": "内存P50利用率",
+      "synonyms": "内存中位数",
+      "businessDescription": "内存利用率50分位%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "max_mem_usage",
+      "businessName": "内存最大利用率",
+      "synonyms": "内存最大值",
+      "businessDescription": "内存利用率最大值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "avg_net_rx_tx_mbps",
+      "businessName": "网络日均吞吐",
+      "synonyms": "平均网络流量",
+      "businessDescription": "网络吞吐日均Mbps",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "peak_net_rx_tx_mbps",
+      "businessName": "网络峰值吞吐",
+      "synonyms": "网络峰值",
+      "businessDescription": "网络吞吐峰值Mbps",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "p50_net_rx_tx_mbps",
+      "businessName": "网络P50吞吐",
+      "synonyms": "网络中位数",
+      "businessDescription": "网络吞吐50分位Mbps",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "max_net_rx_tx_mbps",
+      "businessName": "网络最大吞吐",
+      "synonyms": "网络最大值",
+      "businessDescription": "网络吞吐最大值Mbps",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "avg_disk_usage",
+      "businessName": "磁盘日均利用率",
+      "synonyms": "平均磁盘",
+      "businessDescription": "磁盘利用率日均值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "peak_disk_usage",
+      "businessName": "磁盘峰值利用率",
+      "synonyms": "磁盘峰值",
+      "businessDescription": "磁盘利用率峰值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "p50_disk_usage",
+      "businessName": "磁盘P50利用率",
+      "synonyms": "磁盘中位数",
+      "businessDescription": "磁盘利用率50分位%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "max_disk_usage",
+      "businessName": "磁盘最大利用率",
+      "synonyms": "磁盘最大值",
+      "businessDescription": "磁盘利用率最大值%",
+      "columnComment": "",
+      "dataType": "decimal(5,2)"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "create_time",
+      "businessName": "创建时间",
+      "synonyms": "入库时间",
+      "businessDescription": "记录创建时间",
+      "columnComment": "",
+      "dataType": "datetime"
+    },
+    {
+      "tableName": "machine_component_agg_daily",
+      "columnName": "update_time",
+      "businessName": "更新时间",
+      "synonyms": "修改时间",
+      "businessDescription": "记录更新时间",
+      "columnComment": "",
+      "dataType": "datetime"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "id",
+      "businessName": "主键ID",
+      "synonyms": "记录ID",
+      "businessDescription": "机器历史统计记录唯一标识",
+      "columnComment": "主键",
+      "dataType": "bigint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "date_day",
+      "businessName": "统计日期",
+      "synonyms": "日期,天",
+      "businessDescription": "机器指标按天快照的统计日期",
+      "columnComment": "统计日期",
+      "dataType": "date"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "product_name",
+      "businessName": "产品名称",
+      "synonyms": "产品,业务线",
+      "businessDescription": "机器归属产品名称",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "ip",
+      "businessName": "机器IP",
+      "synonyms": "IP地址,主机IP",
+      "businessDescription": "物理机或虚拟机IP地址",
+      "columnComment": "",
+      "dataType": "varchar(15)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "sn",
+      "businessName": "机器SN",
+      "synonyms": "序列号,设备SN",
+      "businessDescription": "机器硬件序列号",
+      "columnComment": "",
+      "dataType": "varchar(30)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "idc",
+      "businessName": "机房",
+      "synonyms": "IDC,数据中心",
+      "businessDescription": "机器所在机房/数据中心",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "in_cmdb",
+      "businessName": "是否在CMDB",
+      "synonyms": "CMDB在库标识",
+      "businessDescription": "-1否，1是",
+      "columnComment": "CMDB在库",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "cmdb_rsc_id",
+      "businessName": "CMDB资源ID",
+      "synonyms": "资源ID,rsc_id",
+      "businessDescription": "关联t_cmdb_rsc_info.rsc_id",
+      "columnComment": "",
+      "dataType": "bigint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "cmdb_machine_status",
+      "businessName": "CMDB机器状态",
+      "synonyms": "机器状态",
+      "businessDescription": "CMDB中机器状态",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "cmdb_service_status",
+      "businessName": "CMDB服务状态",
+      "synonyms": "服务状态",
+      "businessDescription": "CMDB服务状态",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "cmdb_monitor_group",
+      "businessName": "CMDB监控组",
+      "synonyms": "监控组",
+      "businessDescription": "CMDB监控组名称",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "siyuan_status",
+      "businessName": "思源机器状态",
+      "synonyms": "思源状态",
+      "businessDescription": "对应siyuan_idc_machine.operation",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "siyuan_monitor_group",
+      "businessName": "思源监控组",
+      "synonyms": "监控组",
+      "businessDescription": "思源平台监控组",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "is_test",
+      "businessName": "是否测试机",
+      "synonyms": "测试环境标识",
+      "businessDescription": "-1否，1是",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "tech_machine",
+      "businessName": "是否技术机器",
+      "synonyms": "技术机标识",
+      "businessDescription": "1是，-1否",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "use_department",
+      "businessName": "使用部门",
+      "synonyms": "使用方部门",
+      "businessDescription": "机器使用部门",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "cost_department",
+      "businessName": "成本部门",
+      "synonyms": "成本归属部门",
+      "businessDescription": "机器成本归属部门",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "container_deploy",
+      "businessName": "是否容器部署",
+      "synonyms": "容器化标识",
+      "businessDescription": "-1否，1是",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "bdp_own",
+      "businessName": "是否BDP自有",
+      "synonyms": "BDP归属",
+      "businessDescription": "1是BDP自有，2否",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "device_type",
+      "businessName": "设备类型",
+      "synonyms": "机型类型",
+      "businessDescription": "物理设备类型",
+      "columnComment": "",
+      "dataType": "varchar(30)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "machine_package",
+      "businessName": "机器套餐",
+      "synonyms": "套餐,规格",
+      "businessDescription": "机器硬件套餐名称",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "machine_package_type",
+      "businessName": "机器套餐类型",
+      "synonyms": "套餐类型",
+      "businessDescription": "机器套餐分类",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "machine_package_hardware_detail",
+      "businessName": "套餐硬件详情",
+      "synonyms": "硬件配置",
+      "businessDescription": "cpu/mem/disk等硬件明细",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "machine_cpu",
+      "businessName": "机器CPU型号",
+      "synonyms": "CPU型号",
+      "businessDescription": "机器CPU型号描述",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "cpu_logical_count",
+      "businessName": "CPU逻辑核数",
+      "synonyms": "逻辑核数",
+      "businessDescription": "机器CPU逻辑核心数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "memory_capacity",
+      "businessName": "内存容量",
+      "synonyms": "内存GB",
+      "businessDescription": "机器内存容量GB",
+      "columnComment": "单位GB",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "disk_capacity",
+      "businessName": "磁盘容量",
+      "synonyms": "磁盘GB",
+      "businessDescription": "机器磁盘容量GB",
+      "columnComment": "单位GB",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "os_kernel",
+      "businessName": "操作系统内核",
+      "synonyms": "内核版本",
+      "businessDescription": "完整内核版本",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "os_kernel_simple",
+      "businessName": "内核简版",
+      "synonyms": "内核短版本",
+      "businessDescription": "如xx.xx.xx简版内核",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "os_version",
+      "businessName": "操作系统版本",
+      "synonyms": "OS版本",
+      "businessDescription": "操作系统版本信息",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "org_code",
+      "businessName": "组织编码",
+      "synonyms": "组织代码",
+      "businessDescription": "CMDB组织编码",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "cluster_code",
+      "businessName": "集群编码",
+      "synonyms": "集群代码",
+      "businessDescription": "CMDB集群编码",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "prod_line_code",
+      "businessName": "产品线编码",
+      "synonyms": "产品线代码",
+      "businessDescription": "CMDB产品线编码",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "server_code",
+      "businessName": "服务编码",
+      "synonyms": "服务代码",
+      "businessDescription": "CMDB服务编码",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "group_name",
+      "businessName": "分组名称",
+      "synonyms": "CMDB分组",
+      "businessDescription": "CMDB group_name",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "deploy_type",
+      "businessName": "部署类型",
+      "synonyms": "部署方式",
+      "businessDescription": "1物理/2虚拟/3容器JDOS/4混合JDOS/5其他",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "cal_storage_type",
+      "businessName": "存储类型",
+      "synonyms": "存储分类",
+      "businessDescription": "1本地/2共享/3分布式等",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "machine_use",
+      "businessName": "机器用途",
+      "synonyms": "用途类型",
+      "businessDescription": "1计算/2存储/3混合/4网络/5管理/6其他",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "real_jdos",
+      "businessName": "是否真实JDOS",
+      "synonyms": "JDOS标识",
+      "businessDescription": "1是JDOS，-1否",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "jdos_cluster_name",
+      "businessName": "JDOS集群名",
+      "synonyms": "JDOS集群",
+      "businessDescription": "JDOS集群名称",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "jdos_cluster_zone",
+      "businessName": "JDOS集群Zone",
+      "synonyms": "Zone",
+      "businessDescription": "JDOS集群Zone",
+      "columnComment": "",
+      "dataType": "varchar(100)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "jdos_zone_product_own",
+      "businessName": "JDOS Zone产品归属",
+      "synonyms": "Zone归属",
+      "businessDescription": "集群+Zone产品归属",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "contain_hdfs",
+      "businessName": "是否含HDFS",
+      "synonyms": "",
+      "businessDescription": "-1否，1是",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "contain_hbase",
+      "businessName": "是否含HBase",
+      "synonyms": "",
+      "businessDescription": "-1否，1是",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "contain_yarn",
+      "businessName": "是否含YARN",
+      "synonyms": "",
+      "businessDescription": "-1否，1是",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "contain_clickhouse",
+      "businessName": "是否含ClickHouse",
+      "synonyms": "",
+      "businessDescription": "-1否，1是",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "contain_doris",
+      "businessName": "是否含Doris",
+      "synonyms": "",
+      "businessDescription": "-1否，1是",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "contain_jdq",
+      "businessName": "是否含JDQ",
+      "synonyms": "",
+      "businessDescription": "-1否，1是",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "contain_jrc",
+      "businessName": "是否含JRC",
+      "synonyms": "",
+      "businessDescription": "-1否，1是",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "contain_spark",
+      "businessName": "是否含Spark",
+      "synonyms": "",
+      "businessDescription": "-1否，1是",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "avg_cpu_usage_percent_day",
+      "businessName": "日平均CPU利用率",
+      "synonyms": "日均CPU%",
+      "businessDescription": "当天平均CPU利用率%",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "max_cpu_usage_percent_day",
+      "businessName": "日最大CPU利用率",
+      "synonyms": "日峰值CPU%",
+      "businessDescription": "当天最大CPU利用率%",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "avg_cpu",
+      "businessName": "CPU平均利用率",
+      "synonyms": "平均CPU",
+      "businessDescription": "CPU平均利用率%",
+      "columnComment": "单位%",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "peak_cpu",
+      "businessName": "CPU峰值利用率",
+      "synonyms": "峰值CPU",
+      "businessDescription": "CPU峰值利用率%",
+      "columnComment": "单位%",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "p50_cpu",
+      "businessName": "CPU P50利用率",
+      "synonyms": "CPU中位数",
+      "businessDescription": "CPU 50分位利用率%",
+      "columnComment": "单位%",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "max_cpu",
+      "businessName": "CPU最大利用率",
+      "synonyms": "最大CPU",
+      "businessDescription": "CPU最大利用率%",
+      "columnComment": "单位%",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "avg_mem",
+      "businessName": "内存平均利用率",
+      "synonyms": "平均内存",
+      "businessDescription": "内存平均利用率%",
+      "columnComment": "单位%",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "peak_mem",
+      "businessName": "内存峰值利用率",
+      "synonyms": "峰值内存",
+      "businessDescription": "内存峰值利用率%",
+      "columnComment": "单位%",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "p50_mem",
+      "businessName": "内存P50利用率",
+      "synonyms": "内存中位数",
+      "businessDescription": "内存50分位利用率%",
+      "columnComment": "单位%",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "max_mem",
+      "businessName": "内存最大利用率",
+      "synonyms": "最大内存",
+      "businessDescription": "内存最大利用率%",
+      "columnComment": "单位%",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "avg_disk",
+      "businessName": "磁盘平均利用率",
+      "synonyms": "平均磁盘",
+      "businessDescription": "磁盘平均利用率%",
+      "columnComment": "单位%",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "peak_disk",
+      "businessName": "磁盘峰值利用率",
+      "synonyms": "峰值磁盘",
+      "businessDescription": "磁盘峰值利用率%",
+      "columnComment": "单位%",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "p50_disk",
+      "businessName": "磁盘P50利用率",
+      "synonyms": "磁盘中位数",
+      "businessDescription": "磁盘50分位利用率%",
+      "columnComment": "单位%",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "max_disk",
+      "businessName": "磁盘最大利用率",
+      "synonyms": "最大磁盘",
+      "businessDescription": "磁盘最大利用率%",
+      "columnComment": "单位%",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "avg_net_rx",
+      "businessName": "入网平均流量",
+      "synonyms": "平均入网",
+      "businessDescription": "入网流量均值MB/s",
+      "columnComment": "MB/s",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "peak_net_rx",
+      "businessName": "入网峰值流量",
+      "synonyms": "峰值入网",
+      "businessDescription": "入网流量峰值MB/s",
+      "columnComment": "MB/s",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "p50_net_rx",
+      "businessName": "入网P50流量",
+      "synonyms": "入网中位数",
+      "businessDescription": "入网流量50分位MB/s",
+      "columnComment": "MB/s",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "max_net_rx",
+      "businessName": "入网最大流量",
+      "synonyms": "最大入网",
+      "businessDescription": "入网流量最大值MB/s",
+      "columnComment": "MB/s",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "avg_net_tx",
+      "businessName": "出网平均流量",
+      "synonyms": "平均出网",
+      "businessDescription": "出网流量均值MB/s",
+      "columnComment": "MB/s",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "peak_net_tx",
+      "businessName": "出网峰值流量",
+      "synonyms": "峰值出网",
+      "businessDescription": "出网流量峰值MB/s",
+      "columnComment": "MB/s",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "p50_net_tx",
+      "businessName": "出网P50流量",
+      "synonyms": "出网中位数",
+      "businessDescription": "出网流量50分位MB/s",
+      "columnComment": "MB/s",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "max_net_tx",
+      "businessName": "出网最大流量",
+      "synonyms": "最大出网",
+      "businessDescription": "出网流量最大值MB/s",
+      "columnComment": "MB/s",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "vcpus",
+      "businessName": "CPU核数",
+      "synonyms": "vCPU总量",
+      "businessDescription": "机器CPU核数",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "allocatable_vcpus",
+      "businessName": "可分配CPU核数",
+      "synonyms": "可分配vCPU",
+      "businessDescription": "可分配CPU核数",
+      "columnComment": "",
+      "dataType": "decimal(10,1)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "vcpus_used",
+      "businessName": "已用CPU核数",
+      "synonyms": "已用vCPU",
+      "businessDescription": "已使用CPU核数",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "memory_mb",
+      "businessName": "内存总量MB",
+      "synonyms": "总内存MB",
+      "businessDescription": "机器内存总量MB",
+      "columnComment": "单位MB",
+      "dataType": "bigint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "allocatable_memory_mb",
+      "businessName": "可分配内存MB",
+      "synonyms": "可分配内存",
+      "businessDescription": "可分配内存MB",
+      "columnComment": "单位MB",
+      "dataType": "bigint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "memory_mb_used",
+      "businessName": "已用内存MB",
+      "synonyms": "内存使用量",
+      "businessDescription": "已使用内存MB",
+      "columnComment": "单位MB",
+      "dataType": "bigint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "mdc_status",
+      "businessName": "MDC状态",
+      "synonyms": "监控状态",
+      "businessDescription": "1正常,2异常,3未知",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "is_low_utilization",
+      "businessName": "是否低利用率",
+      "synonyms": "低利用标识",
+      "businessDescription": "1表示低利用率机器",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "is_idle_machine",
+      "businessName": "是否空闲机器",
+      "synonyms": "空闲标识",
+      "businessDescription": "1表示空闲机器",
+      "columnComment": "",
+      "dataType": "tinyint"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "low_util_consecutive_days",
+      "businessName": "低利用连续天数",
+      "synonyms": "低利用天数",
+      "businessDescription": "持续低利用率连续天数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "idle_machine_consecutive_days",
+      "businessName": "空闲连续天数",
+      "synonyms": "空闲天数",
+      "businessDescription": "持续空闲连续天数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "is_yarn_idle",
+      "businessName": "YARN是否空闲",
+      "synonyms": "YARN空闲",
+      "businessDescription": "1表示YARN空闲",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "is_yarn_low_util",
+      "businessName": "YARN是否低利用",
+      "synonyms": "YARN低利用",
+      "businessDescription": "1表示YARN低利用",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "yarn_idle_consecutive_days",
+      "businessName": "YARN空闲连续天数",
+      "synonyms": "",
+      "businessDescription": "YARN持续空闲天数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "yarn_low_util_consecutive_days",
+      "businessName": "YARN低利用连续天数",
+      "synonyms": "",
+      "businessDescription": "YARN持续低利用天数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "is_hdfs_idle",
+      "businessName": "HDFS是否空闲",
+      "synonyms": "HDFS空闲",
+      "businessDescription": "1表示HDFS空闲",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "is_hdfs_low_util",
+      "businessName": "HDFS是否低利用",
+      "synonyms": "HDFS低利用",
+      "businessDescription": "1表示HDFS低利用",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "hdfs_idle_consecutive_days",
+      "businessName": "HDFS空闲连续天数",
+      "synonyms": "",
+      "businessDescription": "HDFS持续空闲天数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "hdfs_low_util_consecutive_days",
+      "businessName": "HDFS低利用连续天数",
+      "synonyms": "",
+      "businessDescription": "HDFS持续低利用天数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "yarn_federation_cluster",
+      "businessName": "YARN联邦集群",
+      "synonyms": "联邦集群",
+      "businessDescription": "YARN联邦集群名称",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "yarn_labels",
+      "businessName": "YARN标签",
+      "synonyms": "yarn label",
+      "businessDescription": "YARN节点标签",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "all_labels",
+      "businessName": "全部标签",
+      "synonyms": "labels",
+      "businessDescription": "YARN等全部标签汇总",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "yarn_state",
+      "businessName": "YARN状态",
+      "synonyms": "yarn状态",
+      "businessDescription": "YARN节点/服务状态",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "yarn_mix_deploy_type",
+      "businessName": "YARN混部类型",
+      "synonyms": "混部类型",
+      "businessDescription": "BDP_MIXED场景yarn混部类型",
+      "columnComment": "",
+      "dataType": "varchar(255)"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "yarn_mix_deloy_ratio",
+      "businessName": "YARN混部比例",
+      "synonyms": "混部比例",
+      "businessDescription": "BDP_MIXED场景yarn混部比例",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "hbase_instance_count",
+      "businessName": "HBase实例数",
+      "synonyms": "hbase实例",
+      "businessDescription": "HBase实例数量",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "hbase_machine_count",
+      "businessName": "HBase机器数",
+      "synonyms": "hbase机器",
+      "businessDescription": "部署HBase的机器数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "hbase_instance_vcpus",
+      "businessName": "HBase实例vCPU",
+      "synonyms": "hbase vcpu",
+      "businessDescription": "HBase实例占用vCPU",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "clickhouse_instance_count",
+      "businessName": "ClickHouse实例数",
+      "synonyms": "ck实例",
+      "businessDescription": "ClickHouse实例数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "clickhouse_machine_count",
+      "businessName": "ClickHouse机器数",
+      "synonyms": "ck机器",
+      "businessDescription": "部署ClickHouse机器数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "clickhouse_instance_vcpus",
+      "businessName": "ClickHouse实例vCPU",
+      "synonyms": "ck vcpu",
+      "businessDescription": "ClickHouse实例vCPU",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "doris_instance_count",
+      "businessName": "Doris实例数",
+      "synonyms": "doris实例",
+      "businessDescription": "Doris实例数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "doris_machine_count",
+      "businessName": "Doris机器数",
+      "synonyms": "doris机器",
+      "businessDescription": "部署Doris机器数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "doris_instance_vcpus",
+      "businessName": "Doris实例vCPU",
+      "synonyms": "doris vcpu",
+      "businessDescription": "Doris实例vCPU",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "flink_instance_count",
+      "businessName": "Flink实例数",
+      "synonyms": "flink实例",
+      "businessDescription": "Flink实例数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "flink_machine_count",
+      "businessName": "Flink机器数",
+      "synonyms": "flink机器",
+      "businessDescription": "部署Flink机器数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "flink_instance_vcpus",
+      "businessName": "Flink实例vCPU",
+      "synonyms": "flink vcpu",
+      "businessDescription": "Flink实例vCPU",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "foundationdb_instance_count",
+      "businessName": "FoundationDB实例数",
+      "synonyms": "fdb实例",
+      "businessDescription": "FoundationDB实例数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "foundationdb_machine_count",
+      "businessName": "FoundationDB机器数",
+      "synonyms": "fdb机器",
+      "businessDescription": "部署FoundationDB机器数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "foundationdb_instance_vcpus",
+      "businessName": "FoundationDB实例vCPU",
+      "synonyms": "fdb vcpu",
+      "businessDescription": "FoundationDB实例vCPU",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "nm_instance_count",
+      "businessName": "NM实例数",
+      "synonyms": "nodemanager实例",
+      "businessDescription": "NodeManager实例数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "nm_machine_count",
+      "businessName": "NM机器数",
+      "synonyms": "nodemanager机器",
+      "businessDescription": "部署NM机器数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "nm_instance_vcpus",
+      "businessName": "NM实例vCPU",
+      "synonyms": "nm vcpu",
+      "businessDescription": "NM实例vCPU",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "kafka_instance_count",
+      "businessName": "Kafka实例数",
+      "synonyms": "kafka实例",
+      "businessDescription": "Kafka实例数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "kafka_machine_count",
+      "businessName": "Kafka机器数",
+      "synonyms": "kafka机器",
+      "businessDescription": "部署Kafka机器数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "kafka_instance_vcpus",
+      "businessName": "Kafka实例vCPU",
+      "synonyms": "kafka vcpu",
+      "businessDescription": "Kafka实例vCPU",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "buffalo_instance_count",
+      "businessName": "Buffalo实例数",
+      "synonyms": "buffalo实例",
+      "businessDescription": "Buffalo实例数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "buffalo_machine_count",
+      "businessName": "Buffalo机器数",
+      "synonyms": "buffalo机器",
+      "businessDescription": "部署Buffalo机器数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "buffalo_instance_vcpus",
+      "businessName": "Buffalo实例vCPU",
+      "synonyms": "buffalo vcpu",
+      "businessDescription": "Buffalo实例vCPU",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "cnp_instance_count",
+      "businessName": "CNP实例数",
+      "synonyms": "cnp实例",
+      "businessDescription": "CNP实例数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "cnp_machine_count",
+      "businessName": "CNP机器数",
+      "synonyms": "cnp机器",
+      "businessDescription": "部署CNP机器数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "cnp_instance_vcpus",
+      "businessName": "CNP实例vCPU",
+      "synonyms": "cnp vcpu",
+      "businessDescription": "CNP实例vCPU",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "lb_instance_count",
+      "businessName": "LB实例数",
+      "synonyms": "负载均衡实例",
+      "businessDescription": "负载均衡实例数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "lb_machine_count",
+      "businessName": "LB机器数",
+      "synonyms": "lb机器",
+      "businessDescription": "部署LB机器数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "lb_instance_vcpus",
+      "businessName": "LB实例vCPU",
+      "synonyms": "lb vcpu",
+      "businessDescription": "LB实例vCPU",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "other_instance_count",
+      "businessName": "其他实例数",
+      "synonyms": "其他组件实例",
+      "businessDescription": "其他类型实例数",
+      "columnComment": "",
+      "dataType": "int"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "other_instance_vcpus",
+      "businessName": "其他实例vCPU",
+      "synonyms": "其他vcpu",
+      "businessDescription": "其他实例占用vCPU",
+      "columnComment": "",
+      "dataType": "double"
+    },
+    {
+      "tableName": "bdp_machine_stat_history",
+      "columnName": "create_time",
+      "businessName": "创建时间",
+      "synonyms": "入库时间",
+      "businessDescription": "记录创建时间",
+      "columnComment": "",
+      "dataType": "datetime"
+    }
+  ]
+}

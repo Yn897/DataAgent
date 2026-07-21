@@ -16,10 +16,12 @@
 package com.alibaba.cloud.ai.dataagent.service.knowledge;
 
 import com.alibaba.cloud.ai.dataagent.vo.PageResult;
+import com.alibaba.cloud.ai.dataagent.dto.knowledge.agentknowledge.AgentKnowledgeBatchImportDTO;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.agentknowledge.AgentKnowledgeQueryDTO;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.agentknowledge.CreateKnowledgeDTO;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.agentknowledge.UpdateKnowledgeDTO;
 import com.alibaba.cloud.ai.dataagent.vo.AgentKnowledgeVO;
+import com.alibaba.cloud.ai.dataagent.vo.BatchImportResult;
 
 public interface AgentKnowledgeService {
 
@@ -36,5 +38,7 @@ public interface AgentKnowledgeService {
 	AgentKnowledgeVO updateKnowledgeRecallStatus(Integer id, Boolean recalled);
 
 	void retryEmbedding(Integer id);
+
+	BatchImportResult batchImport(AgentKnowledgeBatchImportDTO dto);
 
 }

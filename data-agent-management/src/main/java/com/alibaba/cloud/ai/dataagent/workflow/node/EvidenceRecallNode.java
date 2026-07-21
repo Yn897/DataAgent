@@ -253,7 +253,7 @@ public class EvidenceRecallNode implements NodeAction {
 			try {
 				AgentKnowledge knowledge = agentKnowledgeMapper.selectById(knowledgeId);
 				if (knowledge != null) {
-					String title = knowledge.getTitle();
+					String title = knowledge.getTitle() != null ? knowledge.getTitle() : "";
 					// 格式：[来源: xxx] Q: xxx A: xxx
 					result.append(index + 1).append(". [来源: ");
 					result.append(title.isEmpty() ? "知识库" : title);
@@ -295,8 +295,9 @@ public class EvidenceRecallNode implements NodeAction {
 			try {
 				AgentKnowledge knowledge = agentKnowledgeMapper.selectById(knowledgeId);
 				if (knowledge != null) {
-					title = knowledge.getTitle();
-					sourceFilename = knowledge.getSourceFilename();
+					title = knowledge.getTitle() != null ? knowledge.getTitle() : "";
+					// 纯文本 DOCUMENT（批量导入/无上传文件）时 sourceFilename 可能为 null
+					sourceFilename = knowledge.getSourceFilename() != null ? knowledge.getSourceFilename() : "";
 
 					log.debug("Successfully processed {} knowledge with title: {}, source file: {}", knowledgeType,
 							title, sourceFilename);
@@ -310,7 +311,7 @@ public class EvidenceRecallNode implements NodeAction {
 			}
 		}
 
-		// 构建来源信息，格式为"标题-文件名"
+		// 构建来源信息，格式为"标题-文件名"（无文件名时仅用标题）
 		String sourceInfo = title.isEmpty() ? "文档" : title;
 		if (!sourceFilename.isEmpty()) {
 			sourceInfo += "-" + sourceFilename;

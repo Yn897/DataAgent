@@ -74,13 +74,27 @@ public class AgentKnowledgeResourceManager {
 	}
 
 	private void processDocumentKnowledge(AgentKnowledge knowledge) {
+		// 上传文件走 filePath；SQL/纯文本导入只有 content、没有文件
+		List<Document> documents;
+		if (StringUtils.hasText(knowledge.getFilePath())) {
+			documents = getAndSplitDocument(knowledge.getFilePath(), knowledge.getSplitterType());
+		}
+		else if (StringUtils.hasText(knowledge.getContent())) {
+			log.info("DOCUMENT knowledge has no filePath, embedding from content field. knowledgeId={}",
+					knowledge.getId());
+			Document contentDoc = new Document(knowledge.getContent());
+			TextSplitter splitter = textSplitterFactory.getSplitter(knowledge.getSplitterType());
+			documents = splitter.apply(List.of(contentDoc));
+		}
+		else {
+			throw new RuntimeException(
+					"DOCUMENT knowledge requires filePath or content, knowledgeId=" + knowledge.getId());
+		}
 
-		// 处理文档
-		List<Document> documents = getAndSplitDocument(knowledge.getFilePath(), knowledge.getSplitterType());
 		if (documents == null || documents.isEmpty()) {
-			log.error("No documents extracted from file: knowledgeId={}, filePath={}", knowledge.getId(),
+			log.error("No documents extracted: knowledgeId={}, filePath={}", knowledge.getId(),
 					knowledge.getFilePath());
-			throw new RuntimeException("No documents extracted from file");
+			throw new RuntimeException("No documents extracted from file or content");
 		}
 
 		// 使用工具类为文档添加元数据
@@ -89,8 +103,10 @@ public class AgentKnowledgeResourceManager {
 
 		// 添加到向量存储
 		agentVectorStoreService.addDocuments(knowledge.getAgentId().toString(), documentsWithMetadata);
-		log.info("Successfully vectorized DOCUMENT knowledge: id={}, filePath={}, documentCount={}, splitterType={}",
-				knowledge.getId(), knowledge.getFilePath(), documentsWithMetadata.size(), knowledge.getSplitterType());
+		log.info(
+				"Successfully vectorized DOCUMENT knowledge: id={}, filePath={}, hasContent={}, documentCount={}, splitterType={}",
+				knowledge.getId(), knowledge.getFilePath(), StringUtils.hasText(knowledge.getContent()),
+				documentsWithMetadata.size(), knowledge.getSplitterType());
 
 	}
 

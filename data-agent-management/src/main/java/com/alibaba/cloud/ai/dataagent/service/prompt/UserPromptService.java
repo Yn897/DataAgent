@@ -15,8 +15,10 @@
  */
 package com.alibaba.cloud.ai.dataagent.service.prompt;
 
+import com.alibaba.cloud.ai.dataagent.dto.prompt.PromptConfigBatchImportDTO;
 import com.alibaba.cloud.ai.dataagent.dto.prompt.PromptConfigDTO;
 import com.alibaba.cloud.ai.dataagent.entity.UserPromptConfig;
+import com.alibaba.cloud.ai.dataagent.vo.BatchImportResult;
 
 import java.util.List;
 
@@ -124,5 +126,10 @@ public interface UserPromptService {
 	 * @return 操作结果
 	 */
 	boolean updateDisplayOrder(String id, Integer displayOrder);
+
+	/**
+	 * 批量导入提示词配置
+	 */
+	BatchImportResult batchImport(PromptConfigBatchImportDTO dto);
 
 }

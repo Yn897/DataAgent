@@ -1,0 +1,106 @@
+{
+  "name": "资源治理-智能体知识示例",
+  "items": [
+    {
+      "title": "资源治理四张核心表说明",
+      "type": "DOCUMENT",
+      "content": "资源治理平台有四张核心日表，分析时必须先选对表：\n\n1) bdp_machine_stat_history（机器明细快照）\n- 粒度：date_day + 单机（IP/SN）\n- 用途：查某台机器、按IP/机房/产品/监控组筛选、看是否低利用/空闲、看组件部署情况、看连续治理天数\n- 关键字段：date_day, ip, sn, product_name, siyuan_monitor_group, is_low_utilization, is_idle_machine, low_util_consecutive_days, idle_machine_consecutive_days, contain_yarn, contain_hdfs, deploy_type, is_test, bdp_own\n\n2) container_zone_agg_daily（Zone日聚合）\n- 粒度：date_day + jdos_cluster_name + jdos_cluster_zone\n- 用途：Zone维度CPU/内存水位、分配率、是否需要治理\n- 关键字段：host_count, total_vcpus, allocatable_vcpus, vcpus_used, cpu_alloc_rate, cpu_need_governance, memory_alloc_rate, memory_need_governance\n\n3) machine_monitor_group_agg_daily（监控组日聚合）\n- 粒度：date_day + siyuan_monitor_group + product_name\n- 用途：按监控组看机器总数、低利用/空闲数量与占比、CPU/内存/磁盘/网络利用率\n- 关键字段：total_machine_count, low_utilization_count, low_utilization_percent, idle_machine_count, idle_machine_percent, avg_cpu_usage\n\n4) machine_component_agg_daily（组件日聚合）\n- 粒度：date_day + component + product_name\n- 用途：按中间件组件（yarn/hbase/clickhouse/doris等）对比资源利用率与空闲情况\n- 关键字段：component, total_machine_count, low_utilization_percent, idle_machine_percent, avg_cpu_usage\n\n选表原则：\n- 问“哪台机器/哪些IP” → bdp_machine_stat_history\n- 问“哪个Zone需要治理/CPU分配率” → container_zone_agg_daily\n- 问“哪个监控组空闲率高” → machine_monitor_group_agg_daily\n- 问“哪个组件利用率低” → machine_component_agg_daily\n- 时间过滤统一用 date_day。",
+      "isRecall": true,
+      "splitterType": "token"
+    },
+    {
+      "title": "资源治理分析标准流程",
+      "type": "DOCUMENT",
+      "content": "进行资源治理分析时，建议按以下标准流程：\n\n步骤1：明确分析维度\n- 单机明细 / 监控组 / 组件 / Zone 四选一，不要混表口径。\n\n步骤2：确定时间范围\n- 统一使用 date_day 过滤，例如：WHERE date_day BETWEEN '2026-07-01' AND '2026-07-07'。\n- 趋势分析按 date_day 分组排序。\n\n步骤3：确定统计对象\n- 生产统计通常排除测试机：is_test = -1（仅明细表）。\n- BDP自有资源：bdp_own = 1（仅明细表）。\n\n步骤4：选择核心指标\n- 规模：total_machine_count / host_count\n- 风险：low_utilization_percent / idle_machine_percent\n- 水位：cpu_alloc_rate / memory_alloc_rate\n- 治理：cpu_need_governance / memory_need_governance\n- 持续性：low_util_consecutive_days / idle_machine_consecutive_days\n\n步骤5：下钻路径（推荐）\n- 先看聚合表找问题分组（监控组/组件/Zone）\n- 再回明细表 bdp_machine_stat_history 查具体 IP/SN 清单\n\n步骤6：输出报告建议包含\n- 时间范围、统计口径（是否排除测试机）\n- 问题分组TopN（低利用占比/空闲占比/治理Zone数）\n- 关键趋势（按天）\n- 可治理建议（回收、混部、缩容、迁移）",
+      "isRecall": true,
+      "splitterType": "token"
+    },
+    {
+      "title": "资源治理指标体系与字段口径",
+      "type": "DOCUMENT",
+      "content": "资源治理平台常用指标口径如下：\n\n【机器规模】\n- 机器总数：machine_monitor_group_agg_daily.total_machine_count 或 machine_component_agg_daily.total_machine_count\n- 宿主机数：container_zone_agg_daily.host_count\n\n【低利用与空闲】\n- 低利用率机器数：low_utilization_count；占比：low_utilization_percent（%）\n- 空闲机器数：idle_machine_count；占比：idle_machine_percent（%）\n- 单机标识（明细表）：is_low_utilization=1，is_idle_machine=1\n\n【CPU/内存水位（Zone）】\n- CPU分配率 = vcpus_used / allocatable_vcpus，字段 cpu_alloc_rate\n- 内存分配率 = memory_mb_used / allocatable_memory_mb，字段 memory_alloc_rate\n- 需要治理：cpu_need_governance=1 或 memory_need_governance=1\n\n【利用率（聚合表）】\n- CPU日均：avg_cpu_usage（%）\n- CPU峰值：peak_cpu_usage（%）\n- 内存日均：avg_mem_usage（%）\n- 磁盘日均：avg_disk_usage（%）\n- 网络吞吐：avg_net_rx_tx_mbps（Mbps）\n\n【利用率（明细表）】\n- CPU：avg_cpu / peak_cpu / p50_cpu / max_cpu（%）\n- 内存：avg_mem / peak_mem（%）\n- 磁盘：avg_disk / peak_disk（%）\n- 网络：avg_net_rx、avg_net_tx（MB/s）\n\n【组件维度】\n- 是否部署某组件：contain_yarn、contain_hdfs、contain_clickhouse 等（1是，-1否）\n- 组件实例规模：xxx_instance_count、xxx_machine_count\n\n【注意】\n- 明细表网络单位是 MB/s，聚合表网络单位是 Mbps，不可直接比较数值。\n- 空闲机器定义通常严于低利用率机器。",
+      "isRecall": true,
+      "splitterType": "token"
+    },
+    {
+      "title": "查询监控组低利用率机器占比",
+      "type": "QA",
+      "content": "SELECT\n  date_day,\n  siyuan_monitor_group,\n  product_name,\n  total_machine_count,\n  low_utilization_count,\n  low_utilization_percent\nFROM machine_monitor_group_agg_daily\nWHERE date_day = '2026-07-12'\n  AND siyuan_monitor_group = '目标监控组'\nORDER BY low_utilization_percent DESC;\n\n说明：\n1. 低利用率占比直接读 low_utilization_percent，不要自己重算（除非要校验）。\n2. 查Top监控组时去掉监控组条件，按 low_utilization_percent DESC LIMIT N。",
+      "isRecall": true,
+      "splitterType": "token",
+      "question": "查询某个监控组在某天的低利用率机器占比"
+    },
+    {
+      "title": "查询需要CPU治理的Zone",
+      "type": "QA",
+      "content": "SELECT\n  date_day,\n  jdos_cluster_name,\n  jdos_cluster_zone,\n  jdos_zone_product_own,\n  host_count,\n  cpu_alloc_rate,\n  cpu_status,\n  cpu_governance_reason,\n  cpu_low_consecutive_days,\n  cpu_high_consecutive_days\nFROM container_zone_agg_daily\nWHERE date_day = '2026-07-12'\n  AND cpu_need_governance = 1\nORDER BY cpu_alloc_rate ASC;\n\n说明：\n1. 需要治理条件：cpu_need_governance = 1。\n2. 原因字段：cpu_governance_reason（LOW/HIGH）。\n3. 若问“内存需要治理”，改用 memory_need_governance = 1。",
+      "isRecall": true,
+      "splitterType": "token",
+      "question": "查询某天需要CPU治理的Zone列表"
+    },
+    {
+      "title": "查询连续空闲超过N天的机器清单",
+      "type": "QA",
+      "content": "SELECT\n  date_day,\n  ip,\n  sn,\n  product_name,\n  siyuan_monitor_group,\n  idle_machine_consecutive_days,\n  is_idle_machine\nFROM bdp_machine_stat_history\nWHERE date_day = '2026-07-12'\n  AND is_idle_machine = 1\n  AND idle_machine_consecutive_days >= 7\n  AND is_test = -1\nORDER BY idle_machine_consecutive_days DESC;\n\n说明：\n1. 连续空闲天数看 idle_machine_consecutive_days。\n2. 生产口径建议加 is_test = -1 排除测试机。\n3. 若问YARN空闲，改用 is_yarn_idle = 1 和 yarn_idle_consecutive_days。",
+      "isRecall": true,
+      "splitterType": "token",
+      "question": "查询连续空闲超过7天的机器有哪些"
+    },
+    {
+      "title": "按组件对比CPU日均利用率",
+      "type": "QA",
+      "content": "SELECT\n  date_day,\n  component,\n  product_name,\n  total_machine_count,\n  avg_cpu_usage,\n  peak_cpu_usage,\n  low_utilization_percent,\n  idle_machine_percent\nFROM machine_component_agg_daily\nWHERE date_day = '2026-07-12'\nORDER BY avg_cpu_usage ASC;\n\n说明：\n1. 组件对比优先用 machine_component_agg_daily。\n2. 常见 component：yarn、hbase、clickhouse、doris、flink、kafka。\n3. 若指定产品，增加 AND product_name = '目标产品'。",
+      "isRecall": true,
+      "splitterType": "token",
+      "question": "按组件对比某天的CPU日均利用率"
+    },
+    {
+      "title": "查询某产品YARN组件空闲机器数",
+      "type": "QA",
+      "content": "SELECT\n  date_day,\n  component,\n  product_name,\n  total_machine_count,\n  idle_machine_count,\n  idle_machine_percent\nFROM machine_component_agg_daily\nWHERE date_day = '2026-07-12'\n  AND component = 'yarn'\n  AND product_name = '目标产品';\n\n如需下钻到具体机器：\nSELECT ip, sn, siyuan_monitor_group, is_idle_machine, idle_machine_consecutive_days\nFROM bdp_machine_stat_history\nWHERE date_day = '2026-07-12'\n  AND product_name = '目标产品'\n  AND contain_yarn = 1\n  AND is_idle_machine = 1\n  AND is_test = -1;",
+      "isRecall": true,
+      "splitterType": "token",
+      "question": "查询某产品YARN组件在某天的空闲机器数"
+    },
+    {
+      "title": "查询Zone CPU和内存分配率趋势",
+      "type": "QA",
+      "content": "SELECT\n  date_day,\n  jdos_cluster_name,\n  jdos_cluster_zone,\n  cpu_alloc_rate,\n  memory_alloc_rate,\n  cpu_need_governance,\n  memory_need_governance\nFROM container_zone_agg_daily\nWHERE jdos_cluster_name = '目标集群'\n  AND jdos_cluster_zone = '目标Zone'\n  AND date_day BETWEEN '2026-07-01' AND '2026-07-12'\nORDER BY date_day;\n\n说明：\n1. Zone趋势分析统一查 container_zone_agg_daily。\n2. 可同时观察 cpu_need_governance / memory_need_governance 变化。",
+      "isRecall": true,
+      "splitterType": "token",
+      "question": "查询某个Zone最近一段时间的CPU和内存分配率趋势"
+    },
+    {
+      "title": "四张核心表分别解决什么问题",
+      "type": "FAQ",
+      "content": "四张表按分析粒度分工：\n1. bdp_machine_stat_history：单机明细（IP/SN级），用于清单和下钻。\n2. container_zone_agg_daily：Zone资源水位与治理（CPU/内存分配率、是否需治理）。\n3. machine_monitor_group_agg_daily：监控组大盘（机器数、低利用/空闲占比、利用率）。\n4. machine_component_agg_daily：组件大盘（yarn/hbase/clickhouse/doris等）。\n\n经验法则：\n- 先聚合找问题，再明细找机器。",
+      "isRecall": true,
+      "splitterType": "token",
+      "question": "资源治理平台四张核心表分别用来做什么？"
+    },
+    {
+      "title": "低利用率机器和空闲机器有什么区别",
+      "type": "FAQ",
+      "content": "低利用率机器：资源有使用但长期偏低，字段 is_low_utilization=1，连续天数 low_util_consecutive_days。\n空闲机器：基本无负载，更偏向可回收，字段 is_idle_machine=1，连续天数 idle_machine_consecutive_days。\n\n在聚合表中：\n- 低利用：low_utilization_count / low_utilization_percent\n- 空闲：idle_machine_count / idle_machine_percent\n\n治理上通常优先关注空闲机器，其次关注低利用率机器。",
+      "isRecall": true,
+      "splitterType": "token",
+      "question": "低利用率机器和空闲机器有什么区别？"
+    },
+    {
+      "title": "生产资源统计是否需要排除测试机",
+      "type": "FAQ",
+      "content": "需要。生产资源治理统计建议排除测试机：\n- 明细表条件：is_test = -1\n- 若只分析BDP自有：再加 bdp_own = 1\n\n除非用户明确说“包含测试机”，否则默认按生产口径统计。",
+      "isRecall": true,
+      "splitterType": "token",
+      "question": "做生产资源统计时要不要排除测试机？"
+    },
+    {
+      "title": "YARN空闲和通用空闲有什么区别",
+      "type": "FAQ",
+      "content": "通用空闲：is_idle_machine=1，表示机器整体空闲。\nYARN空闲：is_yarn_idle=1，仅表示YARN维度空闲，连续天数看 yarn_idle_consecutive_days。\n\n当用户明确提到“YARN空闲/NodeManager空闲”时，应使用 is_yarn_idle 相关字段，而不是仅用 is_idle_machine。",
+      "isRecall": true,
+      "splitterType": "token",
+      "question": "YARN空闲和通用空闲机器有什么区别？"
+    }
+  ]
+}

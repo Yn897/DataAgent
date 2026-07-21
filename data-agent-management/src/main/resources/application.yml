@@ -10,11 +10,14 @@ springdoc:
 # 存储 DataAgent 业务数据的数据库，并非Agent分析数据的来源
 spring:
   datasource:
-    url: ${DATA_AGENT_DATASOURCE_URL:jdbc:mysql://127.0.0.1:3306/saa_data_agent?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&allowMultiQueries=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai}
+    url: ${DATA_AGENT_DATASOURCE_URL:jdbc:mysql://127.0.0.1:3306/cache_cloud?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&allowMultiQueries=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai}
     username: ${DATA_AGENT_DATASOURCE_USERNAME:root}
-    password: ${DATA_AGENT_DATASOURCE_PASSWORD:root}
+    password: ${DATA_AGENT_DATASOURCE_PASSWORD:123456}
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
+  # DataAgent 使用 ES 8.18.0（本机 Docker 映射 9201）
+  elasticsearch: # 配置 ES 连接信息
+    uris: ${DATA_AGENT_ES_URIS:http://127.0.0.1:9201}
   sql:
     init:
       mode: ${DATA_AGENT_DATASOURCE_SQL_INIT:never}
@@ -25,7 +28,13 @@ spring:
       encoding: utf-8
   ai:
     vectorstore:
-      type: simple
+      type: elasticsearch # 启用 ES 向量库
+      elasticsearch:
+        initialize-schema: true # Spring AI自动创建索引
+        index-name: spring-ai-document-index
+        # 必须与 EMBEDDING 模型输出维度一致（通义 text-embedding-v3 / BGE-M3 等常见为 1024）
+        dimensions: 1024
+        similarity: cosine
     alibaba:
       data-agent:
         vector-store:
@@ -33,6 +42,8 @@ spring:
           table-similarity-threshold: 0.2
           default-topk-limit: 8
           default-similarity-threshold: 0.4
+          enable-hybrid-search: true #开启混合检索
+          elasticsearch-min-score: 0.5
         llm-service-type: stream
         code-executor:
           # 运行Python代码的环境（生产环境建议使用docker，不建议使用local）
@@ -59,6 +70,9 @@ spring:
           host: ${LANGFUSE_HOST:}
           public-key: ${LANGFUSE_PUBLIC_KEY:}
           secret-key: ${LANGFUSE_SECRET_KEY:}
+  codec:
+    # WebFlux 默认仅 256KB，批量导入语义模型/保存大段提示词时会触发 413 PAYLOAD_TOO_LARGE
+    max-in-memory-size: 10MB
   webflux:
     multipart:
       max-file-size: 10MB

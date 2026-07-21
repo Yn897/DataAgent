@@ -18,7 +18,10 @@ package com.alibaba.cloud.ai.dataagent.service.knowledge;
 import com.alibaba.cloud.ai.dataagent.enums.EmbeddingStatus;
 import com.alibaba.cloud.ai.dataagent.enums.KnowledgeType;
 import com.alibaba.cloud.ai.dataagent.converter.AgentKnowledgeConverter;
+import com.alibaba.cloud.ai.dataagent.vo.BatchImportResult;
 import com.alibaba.cloud.ai.dataagent.vo.PageResult;
+import com.alibaba.cloud.ai.dataagent.dto.knowledge.agentknowledge.AgentKnowledgeBatchImportDTO;
+import com.alibaba.cloud.ai.dataagent.dto.knowledge.agentknowledge.AgentKnowledgeImportItem;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.agentknowledge.AgentKnowledgeQueryDTO;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.agentknowledge.CreateKnowledgeDTO;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.agentknowledge.UpdateKnowledgeDTO;
@@ -219,6 +222,63 @@ public class AgentKnowledgeServiceImpl implements AgentKnowledgeService {
 		eventPublisher
 			.publishEvent(new AgentKnowledgeEmbeddingEvent(this, knowledge.getId(), knowledge.getSplitterType()));
 		log.info("Retry embedding for knowledgeId: {}, splitterType: {}", id, knowledge.getSplitterType());
+	}
+
+	@Override
+	public BatchImportResult batchImport(AgentKnowledgeBatchImportDTO dto) {
+		BatchImportResult result = BatchImportResult.builder()
+			.total(dto.getItems().size())
+			.successCount(0)
+			.failCount(0)
+			.build();
+
+		for (int i = 0; i < dto.getItems().size(); i++) {
+			AgentKnowledgeImportItem item = dto.getItems().get(i);
+			int row = i + 1;
+			try {
+				KnowledgeType type = KnowledgeType.fromCode(item.getType());
+				if ((type == KnowledgeType.QA || type == KnowledgeType.FAQ)
+						&& (!StringUtils.hasText(item.getQuestion()) || !StringUtils.hasText(item.getContent()))) {
+					throw new IllegalArgumentException("QA/FAQ 需要 question 与 content");
+				}
+				if (type == KnowledgeType.DOCUMENT && !StringUtils.hasText(item.getContent())) {
+					throw new IllegalArgumentException("DOCUMENT 文本导入需要 content");
+				}
+
+				AgentKnowledge knowledge = new AgentKnowledge();
+				knowledge.setAgentId(dto.getAgentId());
+				knowledge.setTitle(item.getTitle().trim());
+				knowledge.setType(type);
+				knowledge.setQuestion(item.getQuestion());
+				knowledge.setContent(item.getContent());
+				knowledge.setIsRecall(item.getIsRecall() == null || item.getIsRecall() ? 1 : 0);
+				knowledge.setIsDeleted(0);
+				knowledge.setEmbeddingStatus(EmbeddingStatus.PENDING);
+				knowledge.setIsResourceCleaned(0);
+				knowledge.setFileType(type == KnowledgeType.DOCUMENT ? "text" : null);
+				String splitterType = StringUtils.hasText(item.getSplitterType()) ? item.getSplitterType() : "token";
+				knowledge.setSplitterType(splitterType);
+				LocalDateTime now = LocalDateTime.now();
+				knowledge.setCreatedTime(now);
+				knowledge.setUpdatedTime(now);
+
+				if (agentKnowledgeMapper.insert(knowledge) <= 0) {
+					throw new RuntimeException("insert failed");
+				}
+
+				if (knowledge.getIsRecall() == 1) {
+					eventPublisher.publishEvent(
+							new AgentKnowledgeEmbeddingEvent(this, knowledge.getId(), knowledge.getSplitterType()));
+				}
+				result.setSuccessCount(result.getSuccessCount() + 1);
+			}
+			catch (Exception e) {
+				result.setFailCount(result.getFailCount() + 1);
+				result.addError("第" + row + "行[" + item.getTitle() + "]: " + e.getMessage());
+				log.error("智能体知识导入失败 row={}", row, e);
+			}
+		}
+		return result;
 	}
 
 }

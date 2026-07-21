@@ -15,9 +15,11 @@
  */
 package com.alibaba.cloud.ai.dataagent.controller;
 
+import com.alibaba.cloud.ai.dataagent.dto.prompt.PromptConfigBatchImportDTO;
 import com.alibaba.cloud.ai.dataagent.dto.prompt.PromptConfigDTO;
 import com.alibaba.cloud.ai.dataagent.entity.UserPromptConfig;
 import com.alibaba.cloud.ai.dataagent.service.prompt.UserPromptService;
+import com.alibaba.cloud.ai.dataagent.vo.BatchImportResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -333,6 +335,22 @@ public class PromptConfigController {
 			response.put("message", "更新显示顺序失败");
 		}
 
+		return ResponseEntity.ok(response);
+	}
+
+	/**
+	 * 批量导入提示词配置
+	 */
+	@PostMapping("/batch-import")
+	public ResponseEntity<Map<String, Object>> batchImport(@RequestBody PromptConfigBatchImportDTO dto) {
+		logger.info("开始批量导入提示词配置: agentId={}, 数量={}", dto.getAgentId(), dto.getItems().size());
+		BatchImportResult result = promptConfigService.batchImport(dto);
+		Map<String, Object> response = new HashMap<>();
+		response.put("success", true);
+		response.put("message", "批量导入完成");
+		response.put("data", result);
+		logger.info("提示词配置批量导入完成: 总数={}, 成功={}, 失败={}", result.getTotal(), result.getSuccessCount(),
+				result.getFailCount());
 		return ResponseEntity.ok(response);
 	}
 

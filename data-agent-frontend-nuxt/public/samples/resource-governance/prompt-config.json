@@ -1,0 +1,115 @@
+{
+  "name": "资源治理-提示词示例",
+  "items": [
+    {
+      "name": "SQL-四表选表规则",
+      "promptType": "sql-generator",
+      "optimizationPrompt": "生成SQL前必须先判断应使用的表：\n1) 单机IP/SN/连续天数/组件部署明细 → bdp_machine_stat_history\n2) Zone CPU/内存分配率与治理 → container_zone_agg_daily\n3) 监控组大盘（低利用/空闲占比、利用率） → machine_monitor_group_agg_daily\n4) 组件对比（yarn/hbase/clickhouse/doris） → machine_component_agg_daily\n禁止在聚合表与明细表之间混用同名字段；时间过滤统一使用 date_day。",
+      "enabled": true,
+      "description": "约束SQL生成时按问题粒度选择正确核心表",
+      "creator": "admin",
+      "priority": 100,
+      "displayOrder": 1
+    },
+    {
+      "name": "SQL-生产统计口径",
+      "promptType": "sql-generator",
+      "optimizationPrompt": "生产资源统计默认口径：\n- 明细表 bdp_machine_stat_history 默认加 is_test = -1 排除测试机\n- 若用户明确要求“包含测试机”则不加上述条件\n- 若用户要求“BDP自有资源”，再加 bdp_own = 1\n- 分析YARN/HDFS维度空闲时，优先使用 is_yarn_idle / is_hdfs_idle 及对应连续天数字段，不要仅用 is_idle_machine 代替",
+      "enabled": true,
+      "description": "生产环境统计默认过滤规则",
+      "creator": "admin",
+      "priority": 90,
+      "displayOrder": 2
+    },
+    {
+      "name": "SQL-指标字段规范",
+      "promptType": "sql-generator",
+      "optimizationPrompt": "指标字段使用规范：\n- 低利用率占比直接读 low_utilization_percent，空闲占比读 idle_machine_percent\n- Zone水位读 cpu_alloc_rate / memory_alloc_rate，治理筛查读 cpu_need_governance / memory_need_governance\n- 明细表网络单位MB/s（avg_net_rx/tx），聚合表网络单位Mbps（avg_net_rx_tx_mbps），不可混比\n- 除非用户要求校验，否则不要重复计算已有占比字段",
+      "enabled": true,
+      "description": "避免低利用/空闲/分配率字段误用",
+      "creator": "admin",
+      "priority": 80,
+      "displayOrder": 3
+    },
+    {
+      "name": "SQL-趋势查询模板",
+      "promptType": "sql-generator",
+      "optimizationPrompt": "当用户询问“趋势/变化/最近N天”时：\n- 必须按 date_day 分组并 ORDER BY date_day\n- 明确时间范围（BETWEEN 起止日期）\n- 优先返回关键指标列，避免 SELECT *",
+      "enabled": false,
+      "description": "可选：趋势类问题默认按date_day分组（默认禁用，可按需批量启用）",
+      "creator": "admin",
+      "priority": 70,
+      "displayOrder": 4
+    },
+    {
+      "name": "规划-资源治理分析路径",
+      "promptType": "planner",
+      "optimizationPrompt": "制定分析计划时按以下路径：\n1. 明确维度（监控组/组件/Zone/单机）\n2. 明确时间范围（date_day）\n3. 明确指标（规模、低利用、空闲、分配率、利用率）\n4. 先聚合找问题分组，再明细下钻到IP/SN\n5. 输出可执行的治理动作（回收、混部、缩容、迁移）",
+      "enabled": true,
+      "description": "规划节点标准分析步骤",
+      "creator": "admin",
+      "priority": 100,
+      "displayOrder": 1
+    },
+    {
+      "name": "规划-治理建议输出",
+      "promptType": "planner",
+      "optimizationPrompt": "计划中必须包含：\n- 统计口径说明（是否排除测试机）\n- 风险判断依据（连续天数、占比阈值、治理标记）\n- 建议动作及优先级（先处理空闲，再处理低利用；先处理高占比分组）",
+      "enabled": true,
+      "description": "要求计划包含治理建议与风险提示",
+      "creator": "admin",
+      "priority": 85,
+      "displayOrder": 2
+    },
+    {
+      "name": "报告-章节结构",
+      "promptType": "report-generator",
+      "optimizationPrompt": "报告请按以下结构输出：\n1. 分析背景与口径\n2. 核心结论（3-5条）\n3. 关键指标概览（规模、低利用、空闲、水位）\n4. 问题分组TopN（监控组/组件/Zone）\n5. 趋势分析\n6. 治理建议与优先级\n7. 附录：关键SQL或明细样例（如有）",
+      "enabled": true,
+      "description": "资源治理报告标准章节",
+      "creator": "admin",
+      "priority": 100,
+      "displayOrder": 1
+    },
+    {
+      "name": "报告-指标解读口径",
+      "promptType": "report-generator",
+      "optimizationPrompt": "解读指标时请说明：\n- 低利用率：有负载但长期偏低，关注优化与混部\n- 空闲：基本无负载，优先回收\n- CPU/内存分配率：Zone资源水位，配合 need_governance 判断治理紧迫性\n- 连续天数：用于识别持续性问题，避免单日波动误判",
+      "enabled": true,
+      "description": "解读低利用、空闲、分配率时的业务含义",
+      "creator": "admin",
+      "priority": 90,
+      "displayOrder": 2
+    },
+    {
+      "name": "报告-行动建议模板",
+      "promptType": "report-generator",
+      "optimizationPrompt": "治理建议需可执行，按优先级给出：\nP0：连续空闲>=7天且占比高的分组/机器 → 回收或下线评估\nP1：CPU/内存 need_governance=1 的Zone → 容量调整或负载迁移\nP2：低利用率占比高但非空闲 → 混部/缩容/任务迁移\n每条建议注明影响范围（台数、占比、产品、组件/监控组/Zone）",
+      "enabled": true,
+      "description": "输出可落地的治理行动建议",
+      "creator": "admin",
+      "priority": 80,
+      "displayOrder": 3
+    },
+    {
+      "name": "问答-角色与边界",
+      "promptType": "general-chat",
+      "optimizationPrompt": "你是资源治理平台的数据分析助手，只回答与机器资源治理、利用率、空闲、容量优化相关的问题。\n对超出四张核心表能力范围的问题，应明确说明边界并引导用户提供时间范围与分析维度。\n回答要简洁、口径明确，避免臆造字段或表名。",
+      "enabled": true,
+      "description": "限定智能体服务范围与回答风格",
+      "creator": "admin",
+      "priority": 100,
+      "displayOrder": 1
+    },
+    {
+      "name": "问答-四表差异说明",
+      "promptType": "general-chat",
+      "optimizationPrompt": "当用户询问“该用哪张表”时，按以下回答：\n- 单机明细/IP/SN → bdp_machine_stat_history\n- Zone水位治理 → container_zone_agg_daily\n- 监控组大盘 → machine_monitor_group_agg_daily\n- 组件对比 → machine_component_agg_daily\n并说明“先聚合定位问题，再明细下钻”的推荐路径。",
+      "enabled": true,
+      "description": "解释四张核心表各自适用场景",
+      "creator": "admin",
+      "priority": 80,
+      "displayOrder": 2
+    }
+  ]
+}

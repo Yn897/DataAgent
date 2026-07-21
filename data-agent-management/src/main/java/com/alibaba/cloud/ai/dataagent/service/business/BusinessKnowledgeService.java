@@ -15,8 +15,10 @@
  */
 package com.alibaba.cloud.ai.dataagent.service.business;
 
+import com.alibaba.cloud.ai.dataagent.dto.knowledge.businessknowledge.BusinessKnowledgeBatchImportDTO;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.businessknowledge.CreateBusinessKnowledgeDTO;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.businessknowledge.UpdateBusinessKnowledgeDTO;
+import com.alibaba.cloud.ai.dataagent.vo.BatchImportResult;
 import com.alibaba.cloud.ai.dataagent.vo.BusinessKnowledgeVO;
 
 import java.util.List;
@@ -43,5 +45,7 @@ public interface BusinessKnowledgeService {
 	void refreshAllKnowledgeToVectorStore(String agentId) throws Exception;
 
 	void retryEmbedding(Long id);
+
+	BatchImportResult batchImport(BusinessKnowledgeBatchImportDTO dto);
 
 }

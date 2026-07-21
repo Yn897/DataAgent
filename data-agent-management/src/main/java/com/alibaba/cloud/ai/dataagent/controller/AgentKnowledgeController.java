@@ -17,12 +17,14 @@ package com.alibaba.cloud.ai.dataagent.controller;
 
 import com.alibaba.cloud.ai.dataagent.service.file.ByteArrayMultipartFile;
 import com.alibaba.cloud.ai.dataagent.vo.PageResult;
+import com.alibaba.cloud.ai.dataagent.dto.knowledge.agentknowledge.AgentKnowledgeBatchImportDTO;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.agentknowledge.AgentKnowledgeQueryDTO;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.agentknowledge.CreateKnowledgeDTO;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.agentknowledge.UpdateKnowledgeDTO;
 import com.alibaba.cloud.ai.dataagent.service.knowledge.AgentKnowledgeService;
 import com.alibaba.cloud.ai.dataagent.vo.AgentKnowledgeVO;
 import com.alibaba.cloud.ai.dataagent.vo.ApiResponse;
+import com.alibaba.cloud.ai.dataagent.vo.BatchImportResult;
 import com.alibaba.cloud.ai.dataagent.vo.PageResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -166,6 +168,15 @@ public class AgentKnowledgeController {
 	public ApiResponse<AgentKnowledgeVO> retryEmbedding(@PathVariable Integer id) {
 		agentKnowledgeService.retryEmbedding(id);
 		return ApiResponse.success("重试向量化操作成功，如果是文件解析需要花费点时间，请耐心等待...");
+	}
+
+	@PostMapping("/batch-import")
+	public ApiResponse<BatchImportResult> batchImport(@Valid @RequestBody AgentKnowledgeBatchImportDTO dto) {
+		log.info("开始批量导入智能体知识: agentId={}, 数量={}", dto.getAgentId(), dto.getItems().size());
+		BatchImportResult result = agentKnowledgeService.batchImport(dto);
+		log.info("智能体知识批量导入完成: 总数={}, 成功={}, 失败={}", result.getTotal(), result.getSuccessCount(),
+				result.getFailCount());
+		return ApiResponse.success("批量导入完成", result);
 	}
 
 }

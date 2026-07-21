@@ -91,6 +91,14 @@ public interface BusinessKnowledgeMapper {
 	BusinessKnowledge selectById(Long id);
 
 	@Select("""
+			SELECT * FROM business_knowledge
+			WHERE agent_id = #{agentId} AND business_term = #{businessTerm} AND is_deleted = 0
+			LIMIT 1
+			""")
+	BusinessKnowledge selectByAgentIdAndTerm(@Param("agentId") Long agentId,
+			@Param("businessTerm") String businessTerm);
+
+	@Select("""
 			SELECT id FROM business_knowledge
 			WHERE agent_id = #{agentId} AND is_recall = 1 AND is_deleted = 0
 			""")

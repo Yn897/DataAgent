@@ -207,6 +207,15 @@
 									color="primary"
 									@click="navigateToPath('/knowledge/semantic-models')"
 								/>
+								<v-list-item
+									prepend-icon="mdi-database-import"
+									title="批量导入"
+									:active="isActive('/knowledge/import')"
+									density="compact"
+									class="rounded-lg mb-1 navigation-sub-item"
+									color="primary"
+									@click="navigateToPath('/knowledge/import')"
+								/>
 							</v-list-group>
 
 							<v-list-group value="system">
@@ -343,6 +352,7 @@ const routeTitleMap: Record<string, string> = {
 	'/knowledge/business': '业务知识配置',
 	'/knowledge/agents': '智能体知识库',
 	'/knowledge/semantic-models': '语义模型配置',
+	'/knowledge/import': '知识与配置批量导入',
 	'/system/data-sources': '数据连接',
 	'/system/model-config': '模型配置',
 	'/system/settings': '通用设置',

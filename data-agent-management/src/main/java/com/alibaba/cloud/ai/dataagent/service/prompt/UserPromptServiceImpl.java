@@ -15,9 +15,12 @@
  */
 package com.alibaba.cloud.ai.dataagent.service.prompt;
 
+import com.alibaba.cloud.ai.dataagent.dto.prompt.PromptConfigBatchImportDTO;
 import com.alibaba.cloud.ai.dataagent.dto.prompt.PromptConfigDTO;
+import com.alibaba.cloud.ai.dataagent.dto.prompt.PromptConfigImportItem;
 import com.alibaba.cloud.ai.dataagent.entity.UserPromptConfig;
 import com.alibaba.cloud.ai.dataagent.mapper.UserPromptConfigMapper;
+import com.alibaba.cloud.ai.dataagent.vo.BatchImportResult;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -204,6 +207,35 @@ public class UserPromptServiceImpl implements UserPromptService {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public BatchImportResult batchImport(PromptConfigBatchImportDTO dto) {
+		BatchImportResult result = BatchImportResult.builder()
+			.total(dto.getItems().size())
+			.successCount(0)
+			.failCount(0)
+			.build();
+
+		for (int i = 0; i < dto.getItems().size(); i++) {
+			PromptConfigImportItem item = dto.getItems().get(i);
+			int row = i + 1;
+			try {
+				PromptConfigDTO configDTO = new PromptConfigDTO(item.getId(), item.getName(), item.getPromptType(),
+						dto.getAgentId(), item.getOptimizationPrompt(),
+						item.getEnabled() == null || item.getEnabled(), item.getDescription(), item.getCreator(),
+						item.getPriority() != null ? item.getPriority() : 0,
+						item.getDisplayOrder() != null ? item.getDisplayOrder() : 0);
+				saveOrUpdateConfig(configDTO);
+				result.setSuccessCount(result.getSuccessCount() + 1);
+			}
+			catch (Exception e) {
+				result.setFailCount(result.getFailCount() + 1);
+				result.addError("第" + row + "行[" + item.getName() + "]: " + e.getMessage());
+				log.error("提示词配置导入失败 row={}", row, e);
+			}
+		}
+		return result;
 	}
 
 }

@@ -15,10 +15,12 @@
  */
 package com.alibaba.cloud.ai.dataagent.controller;
 
+import com.alibaba.cloud.ai.dataagent.dto.knowledge.businessknowledge.BusinessKnowledgeBatchImportDTO;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.businessknowledge.CreateBusinessKnowledgeDTO;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.businessknowledge.UpdateBusinessKnowledgeDTO;
 import com.alibaba.cloud.ai.dataagent.service.business.BusinessKnowledgeService;
 import com.alibaba.cloud.ai.dataagent.vo.ApiResponse;
+import com.alibaba.cloud.ai.dataagent.vo.BatchImportResult;
 import com.alibaba.cloud.ai.dataagent.vo.BusinessKnowledgeVO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -112,6 +114,16 @@ public class BusinessKnowledgeController {
 	public ApiResponse<Boolean> retryEmbedding(@PathVariable(value = "id") Long id) {
 		businessKnowledgeService.retryEmbedding(id);
 		return ApiResponse.success("success retry embedding");
+	}
+
+	@PostMapping("/batch-import")
+	public ApiResponse<BatchImportResult> batchImport(
+			@RequestBody @Validated BusinessKnowledgeBatchImportDTO dto) {
+		log.info("开始批量导入业务知识: agentId={}, 数量={}", dto.getAgentId(), dto.getItems().size());
+		BatchImportResult result = businessKnowledgeService.batchImport(dto);
+		log.info("业务知识批量导入完成: 总数={}, 成功={}, 失败={}", result.getTotal(), result.getSuccessCount(),
+				result.getFailCount());
+		return ApiResponse.success("批量导入完成", result);
 	}
 
 }
