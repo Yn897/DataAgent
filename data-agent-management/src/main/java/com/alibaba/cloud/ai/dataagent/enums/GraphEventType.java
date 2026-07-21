@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.cloud.ai.dataagent.service.llm;
+package com.alibaba.cloud.ai.dataagent.enums;
 
-public enum LlmServiceEnum {
+public enum GraphEventType {
 
-	BLOCK, STREAM
+	NODE_OUTPUT,
+
+	FINAL_ANSWER,
+
+	HUMAN_FEEDBACK_REQUIRED
 
 }

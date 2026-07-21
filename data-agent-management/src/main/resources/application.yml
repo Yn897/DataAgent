@@ -27,6 +27,11 @@ spring:
       separator: ;
       encoding: utf-8
   ai:
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always
     vectorstore:
       type: elasticsearch # 启用 ES 向量库
       elasticsearch:
@@ -88,8 +93,7 @@ mybatis:
 # 日志配置
 logging:
   level:
-    com.alibaba.cloud.ai.dataagent.service: debug
-    com.alibaba.cloud.ai.dataagent.workflow.node: debug
-    com.alibaba.cloud.ai.mapper: debug
-    org.springframework.jdbc: debug
-
+    com.alibaba.cloud.ai.dataagent.service: info
+    com.alibaba.cloud.ai.dataagent.workflow.node: info
+    com.alibaba.cloud.ai.mapper: info
+    org.springframework.jdbc: info

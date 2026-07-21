@@ -195,7 +195,11 @@ public class BusinessKnowledgeServiceImpl implements BusinessKnowledgeService {
 		metadata.put(Constant.AGENT_ID, knowledge.getAgentId().toString());
 		metadata.put(DocumentMetadataConstant.DB_BUSINESS_TERM_ID, knowledge.getId());
 		metadata.put(DocumentMetadataConstant.VECTOR_TYPE, DocumentMetadataConstant.BUSINESS_TERM);
-		agentVectorStoreService.deleteDocumentsByMetedata(knowledge.getAgentId().toString(), metadata);
+		if (!Boolean.TRUE
+			.equals(agentVectorStoreService.deleteDocumentsByMetadata(knowledge.getAgentId().toString(), metadata))) {
+			throw new IllegalStateException(
+					"Failed to delete business knowledge from vector store: " + knowledge.getId());
+		}
 	}
 
 	@Override
@@ -231,77 +235,15 @@ public class BusinessKnowledgeServiceImpl implements BusinessKnowledgeService {
 				.map(DocumentConverterUtil::convertBusinessKnowledgeToDocument)
 				.toList();
 			agentVectorStoreService.addDocuments(agentId, documents);
+
+			// 批量更新 embedding_status 为 COMPLETED，避免前端一直显示"等待中"
 			for (BusinessKnowledge knowledge : recalledKnowledge) {
 				knowledge.setEmbeddingStatus(EmbeddingStatus.COMPLETED);
 				knowledge.setErrorMsg(null);
 				businessKnowledgeMapper.updateById(knowledge);
 			}
+			log.info("Updated {} business knowledge records to COMPLETED status", recalledKnowledge.size());
 		}
-	}
-
-	@Override
-	public BatchImportResult batchImport(BusinessKnowledgeBatchImportDTO dto) {
-		BatchImportResult result = BatchImportResult.builder()
-			.total(dto.getItems().size())
-			.successCount(0)
-			.failCount(0)
-			.build();
-
-		for (int i = 0; i < dto.getItems().size(); i++) {
-			BusinessKnowledgeImportItem item = dto.getItems().get(i);
-			int row = i + 1;
-			try {
-				if (!StringUtils.hasText(item.getBusinessTerm()) || !StringUtils.hasText(item.getDescription())) {
-					throw new IllegalArgumentException("businessTerm/description 不能为空");
-				}
-				boolean recall = item.getIsRecall() == null || item.getIsRecall();
-				String term = item.getBusinessTerm().trim();
-				BusinessKnowledge existing = businessKnowledgeMapper.selectByAgentIdAndTerm(dto.getAgentId(), term);
-				if (existing != null) {
-					existing.setBusinessTerm(term);
-					existing.setDescription(item.getDescription());
-					if (item.getSynonyms() != null) {
-						existing.setSynonyms(item.getSynonyms());
-					}
-					existing.setIsRecall(recall ? 1 : 0);
-					existing.setEmbeddingStatus(EmbeddingStatus.PENDING);
-					if (businessKnowledgeMapper.updateById(existing) <= 0) {
-						throw new RuntimeException("update failed");
-					}
-				}
-				else {
-					CreateBusinessKnowledgeDTO createDTO = CreateBusinessKnowledgeDTO.builder()
-						.businessTerm(term)
-						.description(item.getDescription())
-						.synonyms(item.getSynonyms())
-						.isRecall(recall)
-						.agentId(dto.getAgentId())
-						.build();
-					BusinessKnowledge entity = businessKnowledgeConverter.toEntityForCreate(createDTO);
-					entity.setEmbeddingStatus(EmbeddingStatus.PENDING);
-					if (businessKnowledgeMapper.insert(entity) <= 0) {
-						throw new RuntimeException("insert failed");
-					}
-				}
-				result.setSuccessCount(result.getSuccessCount() + 1);
-			}
-			catch (Exception e) {
-				result.setFailCount(result.getFailCount() + 1);
-				result.addError("第" + row + "行[" + item.getBusinessTerm() + "]: " + e.getMessage());
-				log.error("业务知识导入失败 row={}", row, e);
-			}
-		}
-
-		if (Boolean.TRUE.equals(dto.getSyncVector()) && result.getSuccessCount() > 0) {
-			try {
-				refreshAllKnowledgeToVectorStore(dto.getAgentId().toString());
-			}
-			catch (Exception e) {
-				log.warn("批量导入后同步向量库失败 agentId={}: {}", dto.getAgentId(), e.getMessage());
-				result.addError("导入成功但同步向量库失败: " + e.getMessage());
-			}
-		}
-		return result;
 	}
 
 	@Override

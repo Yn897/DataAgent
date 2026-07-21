@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.cloud.ai.dataagent.service.hybrid.fusion.impl;
+package com.alibaba.cloud.ai.dataagent.bo;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.ai.document.Document;
 
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class WeightedAverageStrategyTest {
+class DbConfigBOTest {
 
 	@Test
-	void testFuseResults_throwsUnsupportedOperationException() {
-		WeightedAverageStrategy strategy = new WeightedAverageStrategy();
-		List<Document> list1 = List.of(new Document("doc1"));
-		List<Document> list2 = List.of(new Document("doc2"));
+	void toString_excludesPassword() {
+		DbConfigBO config = DbConfigBO.builder()
+			.url("jdbc:test")
+			.username("user")
+			.password("sensitive-password")
+			.build();
 
-		assertThrows(UnsupportedOperationException.class, () -> strategy.fuseResults(5, list1, list2));
+		assertFalse(config.toString().contains("sensitive-password"));
 	}
 
 }
