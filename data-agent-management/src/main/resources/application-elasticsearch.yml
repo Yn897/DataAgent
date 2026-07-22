@@ -8,5 +8,5 @@ spring:
       type: elasticsearch
       elasticsearch:
         index-name: ${ELASTICSEARCH_INDEX_NAME:spring-ai-document-index}
-        dimensions: ${ELASTICSEARCH_DIMENSIONS:1024}
+        dimensions: ${ELASTICSEARCH_DIMENSIONS:4096}
         initialize-schema: ${ELASTICSEARCH_INITIALIZE_SCHEMA:true}

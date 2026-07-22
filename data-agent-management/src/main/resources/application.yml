@@ -37,8 +37,10 @@ spring:
       elasticsearch:
         initialize-schema: true # Spring AI自动创建索引
         index-name: spring-ai-document-index
-        # 必须与 EMBEDDING 模型输出维度一致（通义 text-embedding-v3 / BGE-M3 等常见为 1024）
-        dimensions: 1024
+        # 必须与当前激活的 EMBEDDING 模型输出维度一致。
+        # BGE-M3 / text-embedding-v3 常见为 1024；Qwen3-Embedding-8B 默认为 4096。
+        # 修改后需删除旧索引并重启，否则会出现 dense_vector dimensions mismatch。
+        dimensions: 4096
         similarity: cosine
     alibaba:
       data-agent:
