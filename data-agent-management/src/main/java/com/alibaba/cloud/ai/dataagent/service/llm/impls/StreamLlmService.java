@@ -54,7 +54,14 @@ public class StreamLlmService implements LlmService {
 
 	@Override
 	public Flux<ChatResponse> callSystem(String system) {
-		return registry.getChatClient().prompt().system(system).stream().chatResponse();
+		// Many OpenAI-compatible gateways (e.g. JD llm-gw) reject requests that only
+		// contain a system message ("messages 参数非法"). Always pair with a user turn.
+		return registry.getChatClient()
+			.prompt()
+			.system(system)
+			.user("请根据以上要求完成任务。")
+			.stream()
+			.chatResponse();
 	}
 
 	@Override

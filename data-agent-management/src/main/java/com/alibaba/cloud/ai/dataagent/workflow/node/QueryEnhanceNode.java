@@ -86,7 +86,7 @@ public class QueryEnhanceNode implements NodeAction {
 			log.debug("Successfully parsed query enhance result: {}", queryEnhanceOutputDTO);
 		}
 		catch (Exception e) {
-			log.error("Failed to parse query enhance result", e);
+			log.error("Failed to parse query enhance result. Raw LLM output: {}", enhanceResult, e);
 		}
 
 		if (queryEnhanceOutputDTO == null)
