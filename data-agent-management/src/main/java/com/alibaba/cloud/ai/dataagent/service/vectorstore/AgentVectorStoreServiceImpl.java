@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static com.alibaba.cloud.ai.dataagent.service.vectorstore.DynamicFilterService.buildFilterExpressionString;
 
@@ -39,6 +40,15 @@ import static com.alibaba.cloud.ai.dataagent.service.vectorstore.DynamicFilterSe
 public class AgentVectorStoreServiceImpl implements AgentVectorStoreService {
 
 	private static final String DEFAULT = "default";
+
+	/** 写入向量库遇到限流(429)时的最大重试次数（不含首次）。 */
+	private static final int MAX_RATE_LIMIT_RETRIES = 5;
+
+	/** 限流重试的基础退避时间(ms)，按指数增长：1s、2s、4s、8s、16s。 */
+	private static final long RATE_LIMIT_BASE_BACKOFF_MS = 1000L;
+
+	/** 限流退避的封顶时间(ms)。 */
+	private static final long RATE_LIMIT_MAX_BACKOFF_MS = 16000L;
 
 	private final VectorStore vectorStore;
 
@@ -128,7 +138,56 @@ public class AgentVectorStoreServiceImpl implements AgentVectorStoreService {
 						"Document metadata agentId does not match.");
 			}
 		}
-		vectorStore.add(documents);
+		addWithRateLimitRetry(documents);
+	}
+
+	/**
+	 * 写入向量库，遇到嵌入网关限流(429)时按指数退避重试。 embedding 网关对调用频率有上限，启动自动向量化或批量同步时多线程并发会瞬时超阈值，
+	 * 返回 429「请求次数超过模型限流阈值」。此处对限流错误做退避重试，非限流错误直接抛出。
+	 */
+	private void addWithRateLimitRetry(List<Document> documents) {
+		int attempt = 0;
+		while (true) {
+			try {
+				vectorStore.add(documents);
+				return;
+			}
+			catch (Exception e) {
+				if (!isRateLimitError(e) || attempt >= MAX_RATE_LIMIT_RETRIES) {
+					throw e;
+				}
+				long backoff = Math.min(RATE_LIMIT_BASE_BACKOFF_MS * (1L << attempt), RATE_LIMIT_MAX_BACKOFF_MS);
+				// 加入随机抖动，避免多个并发线程被限流后在同一时刻一起重试再次撞墙
+				backoff += ThreadLocalRandom.current().nextLong(RATE_LIMIT_BASE_BACKOFF_MS);
+				attempt++;
+				log.warn("Embedding rate limited (429), backing off {} ms then retry {}/{}. cause: {}", backoff,
+						attempt, MAX_RATE_LIMIT_RETRIES, e.getMessage());
+				try {
+					Thread.sleep(backoff);
+				}
+				catch (InterruptedException ie) {
+					Thread.currentThread().interrupt();
+					throw new RuntimeException("Interrupted while waiting to retry embedding after rate limit", ie);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 判断异常链中是否为嵌入网关限流。兼容标准 429、以及网关返回的「请求次数超过模型限流阈值」等文案。
+	 */
+	private boolean isRateLimitError(Throwable e) {
+		for (Throwable cause = e; cause != null; cause = cause.getCause()) {
+			String msg = cause.getMessage();
+			if (msg != null) {
+				String lower = msg.toLowerCase();
+				if (lower.contains("429") || lower.contains("too many requests") || lower.contains("rate limit")
+						|| msg.contains("限流") || msg.contains("请求次数超过")) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override
