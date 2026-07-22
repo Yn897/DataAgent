@@ -288,18 +288,32 @@ function extractReportContent(timelineJson: string): string | null {
 			timelineJson,
 		) as import('~/services/graph/index').GraphNodeResponse[][];
 		for (const block of blocks) {
-			if (
-				block[0]?.nodeName === 'ReportGeneratorNode' &&
-				block[0]?.textType === 'MARK_DOWN' &&
-				block[0]?.text
-			) {
-				return block[0].text;
+			if (block[0]?.nodeName !== 'ReportGeneratorNode') continue;
+			const markdownItem = block.find(
+				(n) => n.textType === 'MARK_DOWN' && n.text?.trim(),
+			);
+			if (markdownItem?.text) return markdownItem.text;
+			// Legacy timelines kept textType=TEXT on the first status chunk while
+			// overwriting text with the full markdown body.
+			const head = block[0];
+			if (head?.text?.trim() && !isReportStatusOnly(head.text)) {
+				return head.text;
 			}
 		}
 	} catch {
 		/* ignore */
 	}
 	return null;
+}
+
+function isReportStatusOnly(text: string): boolean {
+	const trimmed = text.trim();
+	return (
+		trimmed === '开始生成报告...' ||
+		trimmed === '报告生成完成！' ||
+		trimmed === '报告生成完成!' ||
+		(/^开始生成报告/.test(trimmed) && trimmed.length < 40)
+	);
 }
 
 function escapeHtml(text: string): string {

@@ -424,7 +424,12 @@ export const useChatStore = defineStore('chat', () => {
 						sessionState.markdownReportContent += response.text;
 						scheduleReportSync();
 						const rn = currentBlock;
-						if (rn) rn[0].text = sessionState.markdownReportContent;
+						if (rn) {
+							// First chunk is usually TEXT ("开始生成报告..."); keep textType in
+							// sync so the persisted timeline can still render the report card.
+							rn[0].textType = TextType.MARK_DOWN;
+							rn[0].text = sessionState.markdownReportContent;
+						}
 					}
 				} else if (response.textType === TextType.RESULT_SET) {
 					if (!isNewStep && currentBlock) currentBlock.push({ ...response });
@@ -474,6 +479,14 @@ export const useChatStore = defineStore('chat', () => {
 			},
 			async () => {
 				flushPendingSync();
+				if (sessionState.markdownReportContent) {
+					for (const block of sessionState.nodeBlocks) {
+						if (block[0]?.nodeName === 'ReportGeneratorNode') {
+							block[0].textType = TextType.MARK_DOWN;
+							block[0].text = sessionState.markdownReportContent;
+						}
+					}
+				}
 				if (sessionState.nodeBlocks.length > 0) {
 					const timelineMsg: ChatMessage = {
 						sessionId,
