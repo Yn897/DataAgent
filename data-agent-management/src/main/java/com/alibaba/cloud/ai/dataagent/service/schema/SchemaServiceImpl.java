@@ -182,7 +182,12 @@ public class SchemaServiceImpl implements SchemaService {
 		}
 		catch (Exception e) {
 			log.error("Failed to process schema for datasource: {}", datasourceId, e);
-			return false;
+			Throwable root = e;
+			while (root.getCause() != null && root.getCause() != root) {
+				root = root.getCause();
+			}
+			String detail = root.getMessage() != null ? root.getMessage() : e.getMessage();
+			throw new RuntimeException("Schema初始化失败: " + detail, e);
 		}
 	}
 
@@ -509,16 +514,30 @@ public class SchemaServiceImpl implements SchemaService {
 			log.warn("TableNames is empty.We need talbeNames to search their columns");
 			return Collections.emptyList();
 		}
-		Filter.Expression filterExpression = dynamicFilterService.buildFilterExpressionForSearchColumns(datasourceId,
-				tableNames);
-		if (filterExpression == null) {
-			log.error("FilterExpression is null.This should not happen when tableNames is not Empty, ");
-			return Collections.emptyList();
+		// 逐表召回列，避免多表合并成一次全局向量检索时，宽表（列很多）把窄表的列挤出 TopK 而被静默丢弃。
+		// 底层 getDocumentsOnlyByFilter 用 query="default" 做相似度检索并按 TopK 截断，若一次性
+		// 用 (表数×maxColumnsPerTable) 作为全局 TopK，当召回表列数之和逼近该上限时，某些表会缺列，
+		// 导致 planner 收到不完整 Schema、误判字段不存在。按表拆分后每张表独享 maxColumnsPerTable 额度。
+		int perTableTopK = dataAgentProperties.getMaxColumnsPerTable();
+		List<Document> columnDocuments = new ArrayList<>();
+		for (String tableName : tableNames) {
+			Filter.Expression filterExpression = dynamicFilterService
+				.buildFilterExpressionForSearchColumns(datasourceId, List.of(tableName));
+			if (filterExpression == null) {
+				log.error("FilterExpression is null for table {}. Skip its column recall.", tableName);
+				continue;
+			}
+			List<Document> tableColumns = agentVectorStoreService.getDocumentsOnlyByFilter(filterExpression,
+					perTableTopK);
+			if (tableColumns.size() >= perTableTopK) {
+				log.warn(
+						"Column recall for table {} hit TopK limit {}, some columns may be truncated. "
+								+ "Consider raising alibaba.data-agent.max-columns-per-table.",
+						tableName, perTableTopK);
+			}
+			columnDocuments.addAll(tableColumns);
 		}
-		// 通过元数据过滤查找目标表下的所有列
-		// TopK=表数量×最大预估列数
-		return agentVectorStoreService.getDocumentsOnlyByFilter(filterExpression,
-				tableNames.size() * dataAgentProperties.getMaxColumnsPerTable());
+		return columnDocuments;
 	}
 
 }

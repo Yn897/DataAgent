@@ -64,8 +64,8 @@ public class DataAgentProperties {
 	 */
 	private int maxplanlength = 2000;
 
-	// 每张表的最大预估列数
-	private int maxColumnsPerTable = 50;
+	// 每张表列召回的 TopK 上限（需覆盖最宽表的列数，否则宽表会被截断丢列，导致 Schema 不完整）
+	private int maxColumnsPerTable = 300;
 
 	/**
 	 * 是否启用SQL执行结果图表判断，默认启用
