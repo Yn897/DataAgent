@@ -99,6 +99,26 @@ class ModelConfigControllerTest {
 	}
 
 	@Test
+	void testSavedConnection_validId_returnsSuccess() {
+		doNothing().when(modelConfigOpsService).testConnection(1);
+
+		ApiResponse<String> result = modelConfigController.testSavedConnection(1);
+
+		assertTrue(result.isSuccess());
+		verify(modelConfigOpsService).testConnection(1);
+	}
+
+	@Test
+	void testSavedConnection_missingConfig_returnsError() {
+		doThrow(new RuntimeException("配置不存在")).when(modelConfigOpsService).testConnection(999);
+
+		ApiResponse<String> result = modelConfigController.testSavedConnection(999);
+
+		assertFalse(result.isSuccess());
+		assertTrue(result.getMessage().contains("配置不存在"));
+	}
+
+	@Test
 	void checkReady_allConfigured_returnsReady() {
 		ModelConfigDTO chatConfig = ModelConfigDTO.builder().modelType("CHAT").isActive(true).build();
 		ModelConfigDTO embeddingConfig = ModelConfigDTO.builder().modelType("EMBEDDING").isActive(true).build();

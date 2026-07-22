@@ -15,6 +15,7 @@
  */
 package com.alibaba.cloud.ai.dataagent.service.aimodelconfig;
 
+import com.alibaba.cloud.ai.dataagent.converter.ModelConfigConverter;
 import com.alibaba.cloud.ai.dataagent.enums.ModelType;
 import com.alibaba.cloud.ai.dataagent.dto.ModelConfigDTO;
 import com.alibaba.cloud.ai.dataagent.entity.ModelConfig;
@@ -98,6 +99,14 @@ public class ModelConfigOpsService {
 	/**
 	 * 测试连接逻辑 注意：这里创建的模型是“临时”的，用完即丢，不会影响当前系统正在运行的模型
 	 */
+	public void testConnection(Integer id) {
+		ModelConfig entity = modelConfigDataService.findById(id);
+		if (entity == null) {
+			throw new RuntimeException("配置不存在");
+		}
+		testConnection(ModelConfigConverter.toDTO(entity));
+	}
+
 	public void testConnection(ModelConfigDTO config) {
 		String modelType = config.getModelType();
 

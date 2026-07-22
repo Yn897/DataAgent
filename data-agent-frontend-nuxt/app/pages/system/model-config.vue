@@ -596,9 +596,17 @@ const handleActivate = async (model: ModelConfig) => {
 };
 
 const handleTestConnection = async (model: ModelConfig) => {
-	testingId.value = model.id ?? null;
+	const modelId = model.id;
+	if (!modelId) {
+		$tip('模型ID不存在', {
+			icon: 'mdi-alert-circle',
+			color: 'error',
+		});
+		return;
+	}
+	testingId.value = modelId;
 	try {
-		const result = await modelConfigService.testConnection(model);
+		const result = await modelConfigService.testConnection(modelId);
 		if (result.success) {
 			$tip(result.message || '连接测试成功');
 		} else {

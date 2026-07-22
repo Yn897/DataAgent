@@ -123,6 +123,34 @@ class ModelConfigOpsServiceTest {
 	}
 
 	@Test
+	void testTestConnection_savedConfigUsesStoredApiKey() {
+		ModelConfig entity = new ModelConfig();
+		entity.setModelType(ModelType.CHAT);
+		entity.setProvider("custom");
+		entity.setModelName("test-model");
+		entity.setApiKey("stored-secret-key");
+		when(modelConfigDataService.findById(1)).thenReturn(entity);
+
+		ChatModel chatModel = mock(ChatModel.class);
+		when(modelFactory.createChatModel(argThat(dto -> "stored-secret-key".equals(dto.getApiKey()))))
+			.thenReturn(chatModel);
+		when(chatModel.call("Hello")).thenReturn("Hi there");
+
+		assertDoesNotThrow(() -> service.testConnection(1));
+		verify(modelConfigDataService).findById(1);
+	}
+
+	@Test
+	void testTestConnection_savedConfigNotFound() {
+		when(modelConfigDataService.findById(999)).thenReturn(null);
+
+		RuntimeException exception = assertThrows(RuntimeException.class, () -> service.testConnection(999));
+
+		assertEquals("配置不存在", exception.getMessage());
+		verifyNoInteractions(modelFactory);
+	}
+
+	@Test
 	void testTestConnection_embedding() {
 		ModelConfigDTO dto = new ModelConfigDTO();
 		dto.setModelType("EMBEDDING");

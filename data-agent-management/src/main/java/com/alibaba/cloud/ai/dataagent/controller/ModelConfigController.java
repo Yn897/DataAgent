@@ -111,6 +111,20 @@ public class ModelConfigController {
 	}
 
 	/**
+	 * 测试已保存的模型配置。由后端根据 ID 读取完整凭证，避免前端回传脱敏后的 API Key。
+	 */
+	@PostMapping("/test/{id}")
+	public ApiResponse<String> testSavedConnection(@PathVariable Integer id) {
+		try {
+			modelConfigOpsService.testConnection(id);
+			return ApiResponse.success("连接测试成功！模型可用。");
+		}
+		catch (Exception e) {
+			return ApiResponse.error("连接测试失败: " + e.getMessage());
+		}
+	}
+
+	/**
 	 * 7. 检查模型配置是否就绪（聊天模型和嵌入模型都需要配置）
 	 */
 	@GetMapping("/check-ready")
