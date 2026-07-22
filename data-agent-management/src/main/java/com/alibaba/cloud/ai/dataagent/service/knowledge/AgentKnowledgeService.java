@@ -39,6 +39,12 @@ public interface AgentKnowledgeService {
 
 	void retryEmbedding(Integer id);
 
+	/**
+	 * 重新将某个智能体下所有已召回的知识同步到向量库（清旧向量并重新向量化）。
+	 * @param agentId 智能体 ID
+	 */
+	void refreshAllKnowledgeToVectorStore(Integer agentId);
+
 	BatchImportResult batchImport(AgentKnowledgeBatchImportDTO dto);
 
 }

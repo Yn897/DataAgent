@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
@@ -168,6 +169,24 @@ public class AgentKnowledgeController {
 	public ApiResponse<AgentKnowledgeVO> retryEmbedding(@PathVariable Integer id) {
 		agentKnowledgeService.retryEmbedding(id);
 		return ApiResponse.success("重试向量化操作成功，如果是文件解析需要花费点时间，请耐心等待...");
+	}
+
+	@PostMapping("/refresh-vector-store")
+	public ApiResponse<Boolean> refreshVectorStore(@RequestParam("agentId") String agentId) {
+		if (!StringUtils.hasText(agentId)) {
+			return ApiResponse.error("agentId cannot be empty");
+		}
+		try {
+			agentKnowledgeService.refreshAllKnowledgeToVectorStore(Integer.valueOf(agentId.trim()));
+			return ApiResponse.success("已开始同步到向量库，文件解析可能需要一点时间，请稍后刷新查看状态");
+		}
+		catch (NumberFormatException e) {
+			return ApiResponse.error("agentId 格式不正确");
+		}
+		catch (Exception e) {
+			log.error("Failed to refresh vector store for agentId: {}", agentId, e);
+			return ApiResponse.error("同步到向量库失败");
+		}
 	}
 
 	@PostMapping("/batch-import")

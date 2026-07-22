@@ -46,6 +46,16 @@
 					筛选
 				</v-btn>
 				<v-btn
+					color="blue-darken-1"
+					prepend-icon="mdi-sync"
+					class="text-none px-6"
+					elevation="0"
+					:loading="refreshLoading"
+					@click="handleRefreshVectorStore"
+				>
+					同步到向量库
+				</v-btn>
+				<v-btn
 					color="blue-darken-3"
 					prepend-icon="mdi-plus"
 					class="text-none px-6"
@@ -223,14 +233,11 @@
 						<v-btn
 							size="small"
 							variant="text"
-							:color="item.isRecall ? 'grey-darken-1' : 'blue-darken-1'"
+							:color="item.isRecall ? 'orange-darken-2' : 'blue-darken-1'"
 							:icon="item.isRecall ? 'mdi-bookmark-off' : 'mdi-bookmark-plus'"
+							:title="item.isRecall ? '取消召回' : '设为召回'"
 							@click="toggleStatus(item)"
-						>
-							<v-tooltip activator="parent" location="top">{{
-								item.isRecall ? '取消召回' : '设为召回'
-							}}</v-tooltip>
-						</v-btn>
+						/>
 						<v-btn
 							size="small"
 							variant="text"
@@ -525,6 +532,7 @@ const total = ref(0);
 const currentEditId = ref<number | null>(null);
 const selectedFile = ref<File | null>(null);
 const retryLoadingMap = ref<Record<number, boolean>>({});
+const refreshLoading = ref(false);
 
 const queryParams = reactive<AgentKnowledgeQueryDTO>({
 	agentId: agentId.value,
@@ -781,6 +789,38 @@ async function handleRetry(knowledge: AgentKnowledge) {
 	} finally {
 		retryLoadingMap.value[knowledge.id] = false;
 	}
+}
+
+function handleRefreshVectorStore() {
+	showConfirm({
+		title: '确认同步',
+		message:
+			'将清除已召回知识的现有向量并重新向量化（文件类型会重新解析，可能耗时较久）。确定要同步吗？',
+		confirmText: '确定同步',
+		icon: 'mdi-sync',
+		onConfirm: async () => {
+			refreshLoading.value = true;
+			try {
+				const result =
+					await agentKnowledgeService.refreshAllKnowledgeToVectorStore(
+						agentId.value.toString(),
+					);
+				if (result) {
+					$tip('已开始同步到向量库，请稍后刷新查看状态');
+					await loadKnowledgeList();
+				} else {
+					$tip('同步到向量库失败', {
+						color: 'error',
+						icon: 'mdi-alert-circle',
+					});
+				}
+			} catch {
+				$tip('同步到向量库失败', { color: 'error', icon: 'mdi-alert-circle' });
+			} finally {
+				refreshLoading.value = false;
+			}
+		},
+	});
 }
 
 function deleteKnowledge(knowledge: AgentKnowledge) {

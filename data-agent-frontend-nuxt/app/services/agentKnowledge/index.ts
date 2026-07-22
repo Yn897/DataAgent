@@ -257,6 +257,22 @@ class AgentKnowledgeService {
   }
 
   /**
+   * @description 将某个智能体下所有已召回的知识重新同步到向量库
+   * @param {string} agentId - 智能体 ID
+   * @returns {Promise<boolean>} 是否成功触发同步
+   */
+  async refreshAllKnowledgeToVectorStore(agentId: string): Promise<boolean> {
+    const response = await axios.post<{ success: boolean }>(
+      `${API_BASE_URL}/refresh-vector-store`,
+      null,
+      {
+        params: { agentId },
+      },
+    );
+    return response.data.success;
+  }
+
+  /**
    * @description 获取智能体知识库的统计信息
    * @param {number} agentId - 智能体 ID
    * @returns {Promise<{totalCount: number, typeStatistics: Array<[string, number]>}>} 统计数据

@@ -225,6 +225,28 @@ public class AgentKnowledgeServiceImpl implements AgentKnowledgeService {
 	}
 
 	@Override
+	@Transactional
+	public void refreshAllKnowledgeToVectorStore(Integer agentId) {
+		// 只处理已召回且未删除的知识；每条重置为 PENDING 并发出向量化事件，
+		// 事件监听器在事务提交后异步执行，doEmbedingToVectorStore 会先删旧向量再写入，天然幂等。
+		List<Integer> recalledIds = agentKnowledgeMapper.selectRecalledKnowledgeIds(agentId);
+		int triggered = 0;
+		for (Integer id : recalledIds) {
+			AgentKnowledge knowledge = agentKnowledgeMapper.selectById(id);
+			if (knowledge == null || EmbeddingStatus.PROCESSING.equals(knowledge.getEmbeddingStatus())) {
+				continue;
+			}
+			knowledge.setEmbeddingStatus(EmbeddingStatus.PENDING);
+			knowledge.setErrorMsg("");
+			agentKnowledgeMapper.update(knowledge);
+			eventPublisher
+				.publishEvent(new AgentKnowledgeEmbeddingEvent(this, knowledge.getId(), knowledge.getSplitterType()));
+			triggered++;
+		}
+		log.info("Triggered re-embedding for {} recalled agent knowledge records, agentId: {}", triggered, agentId);
+	}
+
+	@Override
 	public BatchImportResult batchImport(AgentKnowledgeBatchImportDTO dto) {
 		BatchImportResult result = BatchImportResult.builder()
 			.total(dto.getItems().size())
